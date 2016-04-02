@@ -11,6 +11,8 @@ dist
 /.idea_modules
 /.classpath
 /.project
+/.cache-main
+/.cache-tests
 /RUNNING_PID
 /.settings
 /bin/
