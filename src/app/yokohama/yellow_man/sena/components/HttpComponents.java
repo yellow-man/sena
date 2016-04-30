@@ -28,7 +28,7 @@ public class HttpComponents {
 	 * @since 1.0
 	 */
 	public static String executeGet(String url) {
-		AppLogger.info("===== HTTP GET Start =====：url=" + url);
+		AppLogger.info("HTTP GET Start：url=" + url);
 		String ret = null;
 
 		try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
@@ -43,7 +43,7 @@ public class HttpComponents {
 		} catch (IOException e) {
 			AppLogger.error("HTTP GET リクエスト時にエラーが発生しました。：url=" + url, e);
 		}
-		AppLogger.info("===== HTTP GET  End  =====：url=" + url);
+		AppLogger.info("HTTP GET  End ：url=" + url);
 		return ret;
 	}
 
@@ -54,7 +54,7 @@ public class HttpComponents {
 	 * @since 1.0
 	 */
 	public static String executePost(String url) {
-		AppLogger.info("===== HTTP POST Start =====");
+		AppLogger.info("HTTP POST Start：url=" + url);
 		String ret = null;
 
 		try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
@@ -78,7 +78,7 @@ public class HttpComponents {
 		} catch (IOException e) {
 			AppLogger.error("HTTP POST リクエスト時にエラーが発生しました。：url=" + url, e);
 		}
-		AppLogger.info("===== HTTP POST End =====");
+		AppLogger.info("HTTP POST  End ：url=" + url);
 		return ret;
 	}
 }

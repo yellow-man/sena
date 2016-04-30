@@ -38,7 +38,7 @@ public class ListUtils {
 			return "";
 		}
 
-		StringBuffer buff = new StringBuffer("[");
+		StringBuffer buff = new StringBuffer();
 		int size = list.size();
 		for (int i = 0; i < size; i++) {
 			buff.append(list.get(i)).append(",");
@@ -47,8 +47,6 @@ public class ListUtils {
 		if (buff.length() > 0) {
 			buff.deleteCharAt(buff.length() - 1);
 		}
-		buff.append("]");
-
 		return buff.toString();
 	}
 }

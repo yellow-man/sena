@@ -1,14 +1,20 @@
 package yokohama.yellow_man.sena.jobs;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.PrintWriter;
 import java.io.StringReader;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang3.BooleanUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 
 import au.com.bytecode.opencsv.CSVReader;
+import play.Play;
 import yokohama.yellow_man.common_tools.ListUtils;
 import yokohama.yellow_man.common_tools.StringUtils;
 import yokohama.yellow_man.sena.components.AppLogger;
@@ -25,8 +31,22 @@ import yokohama.yellow_man.sena.models.Stocks;
  */
 public class ImportStocks extends AppLoggerJob {
 
-	/** 銘柄一覧インポートURL */
-	private static final String IMPORT_STOCKS_CSV_URL = "http://kabusapo.com/dl-file/dl-stocklist.php";
+	/**
+	 * 銘柄一覧インポートURL
+	 * {@code application.conf}ファイル{@code import_stocks.csv_url}キーにて値の変更可。
+	 */
+	private static final String IMPORT_STOCKS_CSV_URL       = Play.application().configuration().getString("import_stocks.csv_url", "http://kabusapo.com/dl-file/dl-stocklist.php");
+
+	/**
+	 * CSVファイル出力path
+	 * {@code application.conf}ファイル{@code import_stocks.csv_file_path}キーにて値の変更可。
+	 */
+	private static final String IMPORT_STOCKS_CSV_FILE_PATH = Play.application().configuration().getString("import_stocks.csv_file_path", "./files");
+	/**
+	 * CSVファイル名
+	 * {@code application.conf}ファイル{@code import_stocks.csv_file_name}キーにて値の変更可。
+	 */
+	private static final String IMPORT_STOCKS_CSV_FILE_NAME = Play.application().configuration().getString("import_stocks.csv_file_name", ImportStocks.class.getSimpleName() + "_%tF.csv");
 
 	/**
 	 * 銘柄一覧インポートバッチクラスコンストラクタ。
@@ -45,29 +65,54 @@ public class ImportStocks extends AppLoggerJob {
 	 */
 	@Override
 	protected void run(List<String> args) {
+		AppLogger.info("銘柄一覧インポートバッチ　開始");
 
+		// 現在日時
 		Date now = new Date();
+		// 成功件数
+		int success = 0;
+		// エラー件数
+		int error = 0;
 
-		// CSVファイル取得
+		// CSVファイル取得。
 		String body = HttpComponents.executeGet(IMPORT_STOCKS_CSV_URL);
 		if (StringUtils.isEmptyWithTrim(body)) {
 			AppLogger.error("銘柄一覧CSV取り込みに失敗しました。リクエストURLを確認してください。：URL=" + IMPORT_STOCKS_CSV_URL);
 			return;
 		}
 
-		// 取り込み済みのデータを全件削除
+		// 取り込み済みのデータを全件削除。
 		int deleteCount = StocksComponent.deleteAll();
 		AppLogger.info("取り込み済みデータを削除しました。：deleteCount=" + deleteCount);
 
-		// CSV解析
+		// ファイル書き込みも同時に行う。
+		File file = null;
+		PrintWriter printWriter = null;
+
+		// CSV解析。
 		CSVReader reader = null;
 		try {
-			reader = new CSVReader(new BufferedReader(new StringReader(body)));
-			// ヘッダー行のため処理を飛ばす。
-			reader.readNext();
+			String filePath = IMPORT_STOCKS_CSV_FILE_PATH + "/" + getClass().getName();
+			file = new File(filePath);
+			if (!file.exists()) {
+				file.mkdirs();
+			}
+			String fileName = "/" + String.format(IMPORT_STOCKS_CSV_FILE_NAME, new Date());
+			file = new File(filePath + fileName);
+			printWriter = new PrintWriter(new BufferedWriter(new FileWriter(file)));
 
+			// ヘッダー行のため処理を飛ばす。
 			String [] nextLine;
+			reader = new CSVReader(new BufferedReader(new StringReader(body)));
+			nextLine = reader.readNext();
+
+			// ヘッダー行書き込み。
+			printWriter.println(ListUtils.toString(Arrays.asList(nextLine)));
+
 			while ((nextLine = reader.readNext()) != null) {
+				// ボディ部書き込み。
+				printWriter.println(ListUtils.toString(Arrays.asList(nextLine)));
+
 				try {
 					Stocks stocks = new Stocks();
 					stocks.date               = now;
@@ -75,7 +120,7 @@ public class ImportStocks extends AppLoggerJob {
 					stocks.stockName          = nextLine[1];
 					stocks.market             = nextLine[2];
 					stocks.topixSector        = nextLine[3];
-					stocks.shareUnit          = Integer.parseInt(nextLine[4]);
+					stocks.shareUnit          = NumberUtils.toInt(nextLine[4], -1);
 					stocks.nikkei225Flg       = BooleanUtils.toBooleanObject(nextLine[5]);
 					stocks.created            = now;
 					stocks.modified           = now;
@@ -83,8 +128,11 @@ public class ImportStocks extends AppLoggerJob {
 
 					// 時間がかかるが、バルクインサートは使わず1件ずつ処理する。
 					stocks.save();
+					success++;
+
 				} catch (Exception e) {
-					AppLogger.error("銘柄一覧CSV解析処理に失敗しました。：nextLine=" + ListUtils.toString(Arrays.asList(nextLine)), e);
+					AppLogger.error("銘柄一覧CSV解析処理に失敗しました。：nextLine=[" + ListUtils.toString(Arrays.asList(nextLine)) + "]", e);
+					error++;
 				}
 			}
 		} catch (Exception e) {
@@ -99,6 +147,12 @@ public class ImportStocks extends AppLoggerJob {
 					return;
 				}
 			}
+			if (printWriter != null) {
+				printWriter.flush();
+				printWriter.close();
+			}
 		}
+
+		AppLogger.info("銘柄一覧インポートバッチ　終了：処理件数=" + String.valueOf(success + error) + ", 成功件数=" + success + ", 失敗件数=" + error);
 	}
 }
