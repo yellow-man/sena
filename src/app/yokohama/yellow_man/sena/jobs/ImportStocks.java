@@ -41,7 +41,7 @@ public class ImportStocks extends AppLoggerJob {
 	 * CSVファイル出力path
 	 * {@code application.conf}ファイル{@code import_stocks.csv_file_path}キーにて値の変更可。
 	 */
-	private static final String IMPORT_STOCKS_CSV_FILE_PATH = Play.application().configuration().getString("import_stocks.csv_file_path", "./files");
+	private static final String IMPORT_STOCKS_CSV_FILE_PATH = Play.application().configuration().getString("import_stocks.csv_file_path", "./files/");
 	/**
 	 * CSVファイル名
 	 * {@code application.conf}ファイル{@code import_stocks.csv_file_name}キーにて値の変更可。
@@ -92,7 +92,7 @@ public class ImportStocks extends AppLoggerJob {
 		// CSV解析。
 		CSVReader reader = null;
 		try {
-			String filePath = IMPORT_STOCKS_CSV_FILE_PATH + "/" + getClass().getName();
+			String filePath = IMPORT_STOCKS_CSV_FILE_PATH + getClass().getName();
 			file = new File(filePath);
 			if (!file.exists()) {
 				file.mkdirs();
