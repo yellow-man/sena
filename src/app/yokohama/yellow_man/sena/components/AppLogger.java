@@ -6,6 +6,11 @@ import java.io.StringWriter;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
+import ch.qos.logback.classic.Logger;
+import ch.qos.logback.classic.LoggerContext;
+import ch.qos.logback.classic.encoder.PatternLayoutEncoder;
+import ch.qos.logback.classic.spi.ILoggingEvent;
+import ch.qos.logback.core.FileAppender;
 import play.Play;
 import yokohama.yellow_man.common_tools.StringUtils;
 
@@ -37,6 +42,49 @@ public class AppLogger {
 
 	/** Logger定義 */
 	private static ch.qos.logback.classic.Logger MY_LOGGER = (ch.qos.logback.classic.Logger) LoggerFactory.getLogger(APP_LOGGER_NAME);
+
+	/**
+	 * 新しくFileAppender定義したロガーに差し替える。
+	 *
+	 * @param loggerName ロガー名
+	 * @param file ファイル出力先
+	 * @since 1.0
+	 */
+	public static void addLoggerFileAppender(String loggerName, String file) {
+		LoggerContext context = (LoggerContext) LoggerFactory.getILoggerFactory();
+
+		// 新しいEncoderを生成する
+		PatternLayoutEncoder layout = new PatternLayoutEncoder();
+		layout.setPattern("[%date{yyyy-MM-dd HH:mm:ss:SSS}] [%level] [%.5thread] [%logger] [%X{fileline}] [%msg] %xEx%n");
+		layout.setContext(context);
+		layout.start();
+
+		// 新しいAppenderを生成する
+		FileAppender<ILoggingEvent> fileAppender = new FileAppender<ILoggingEvent>();
+		fileAppender.setFile(file);
+		fileAppender.setAppend(false);
+		fileAppender.setEncoder(layout);
+		fileAppender.setContext(context);
+		fileAppender.start();
+
+		Logger logger = (Logger) LoggerFactory.getLogger(loggerName);
+		logger.addAppender(fileAppender);
+		logger.setLevel(MY_LOGGER.getLevel());
+		logger.setAdditive(true);
+
+		// ロガーの差し替え
+		MY_LOGGER = logger;
+	}
+
+	/**
+	 * 通常のロガーに差し替える。
+	 *
+	 * @since 1.0
+	 */
+	public static void resetLogger() {
+		// ロガーの差し替え
+		MY_LOGGER = (ch.qos.logback.classic.Logger) LoggerFactory.getLogger(APP_LOGGER_NAME);
+	}
 
 	/**
 	 * ログレベル{@code ERROR}の出力を行う。

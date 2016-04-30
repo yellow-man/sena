@@ -11,6 +11,8 @@ libraryDependencies ++= Seq(
   javaEbean,
   cache,
   javaWs,
-  "mysql"  % "mysql-connector-java" % "5.1.38",
-  "args4j" % "args4j"               % "2.33"
+  "mysql"                     % "mysql-connector-java" % "5.1.38",
+  "args4j"                    % "args4j"               % "2.33",
+  "org.apache.httpcomponents" % "httpclient"           % "4.5.2",
+  "net.sf.opencsv"            % "opencsv"              % "2.3"
 )

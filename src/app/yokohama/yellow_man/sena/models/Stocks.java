@@ -31,17 +31,9 @@ public class Stocks extends AppModel {
 	@Column(name = "market")
 	public String market;
 
-	/** 市場タイプID */
-	@Column(name = "market_types_id")
-	public Integer marketTypesId;
-
 	/** 業種分類 */
 	@Column(name = "topix_sector")
 	public String topixSector;
-
-	/** 業種分類タイプID */
-	@Column(name = "topix_sector_types_id")
-	public Integer topixSectorTypesId;
 
 	/** 単元株数 */
 	@Column(name = "share_unit")

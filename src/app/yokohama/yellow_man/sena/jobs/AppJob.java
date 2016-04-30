@@ -2,6 +2,8 @@ package yokohama.yellow_man.sena.jobs;
 
 import java.util.List;
 
+import yokohama.yellow_man.sena.components.AppLogger;
+
 /**
  * バッチ処理の基底クラス。
  * <p>バッチ処理を実装する場合、このクラスを継承する。
@@ -27,6 +29,7 @@ public abstract class AppJob {
 				after();
 			}
 		} catch (Exception e) {
+			AppLogger.error("バッチ処理実行中にエラーが発生しました。", e);
 		} finally {
 			_finally();
 		}
