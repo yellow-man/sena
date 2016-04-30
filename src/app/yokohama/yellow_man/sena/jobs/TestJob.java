@@ -2,6 +2,8 @@ package yokohama.yellow_man.sena.jobs;
 
 import java.util.List;
 
+import yokohama.yellow_man.sena.components.AppLogger;
+
 /**
  * バッチ処理テストクラス。
  * <p>バッチ疎通確認等に使用する。
@@ -24,6 +26,12 @@ public class TestJob extends AppJob {
 	 */
 	@Override
 	protected void run(List<String> args) {
-		System.out.println("test");
+
+		// ログ出力テスト
+		AppLogger.debug("debugテスト");
+		AppLogger.info("infoテスト");
+		AppLogger.warn("warnテスト");
+		AppLogger.error("errorテスト");
+		AppLogger.error("errorテスト", new Exception());
 	}
 }

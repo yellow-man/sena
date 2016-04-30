@@ -37,7 +37,7 @@ public abstract class AppJob {
 	 * 初期化処理が必要な場合、このメソッドを継承する。
 	 * <p>初期化に失敗した場合、{@link #before()}、{@link #run(List)}、{@link #after()}メソッドの処理は行われない。
 	 *
-	 * @return true：初期化成功、false：失敗
+	 * @return true：初期化成功、false：失敗。
 	 * @since 1.0
 	 */
 	protected boolean init() {
