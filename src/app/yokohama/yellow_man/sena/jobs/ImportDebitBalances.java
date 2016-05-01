@@ -1,6 +1,5 @@
 package yokohama.yellow_man.sena.jobs;
 
-import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -127,8 +126,7 @@ public class ImportDebitBalances extends AppLoggerMailJob {
 				debitBalances.stockCode            = debitBalancesEntity.stockCode;
 				debitBalances.marginSellingBalance = NumberUtils.toInt(debitBalancesEntity.marginSellingBalance, -1);
 				debitBalances.marginDebtBalance    = NumberUtils.toInt(debitBalancesEntity.marginDebtBalance, -1);
-				debitBalances.ratioMarginBalance   = (NumberUtils.isNumber(debitBalancesEntity.ratioMarginBalance))
-															? new BigDecimal(debitBalancesEntity.ratioMarginBalance) : new BigDecimal("-1");
+				debitBalances.ratioMarginBalance   = yokohama.yellow_man.common_tools.NumberUtils.toBigDecimal(debitBalancesEntity.ratioMarginBalance, "-1");
 				debitBalances.created              = new Date();
 				debitBalances.modified             = new Date();
 				debitBalances.deleteFlg            = false;

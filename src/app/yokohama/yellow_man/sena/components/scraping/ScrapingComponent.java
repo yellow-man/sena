@@ -2,10 +2,13 @@ package yokohama.yellow_man.sena.components.scraping;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.http.HttpStatus;
 import org.apache.http.NameValuePair;
@@ -22,9 +25,9 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import yokohama.yellow_man.sena.components.AppLogger;
 import yokohama.yellow_man.sena.components.scraping.entity.CompanySchedulesEntity;
 import yokohama.yellow_man.sena.components.scraping.entity.DebitBalancesEntity;
+import yokohama.yellow_man.sena.components.scraping.entity.IndicatorsEntity;
 
 /**
  * ウェブスクレイピングを行うクラス。
@@ -35,12 +38,17 @@ import yokohama.yellow_man.sena.components.scraping.entity.DebitBalancesEntity;
 public class ScrapingComponent {
 
 	/** 企業スケジュールを取得：アクセス先のURL */
-	private static final String GET_SCHEDULE_ACCESS_URL       = "http://www.nikkei.com/markets/kigyo/money-schedule/kessan/";
+	private static final String GET_SCHEDULE_ACCESS_URL         = "http://www.nikkei.com/markets/kigyo/money-schedule/kessan/";
 	/** 企業スケジュールを取得：ベースとなるスタイルシートのpath（元のXPath：『 //*[@id="newpresSchedule"]/div[3]/div/div[2]/table/tbody/tr 』） */
-	private static final String GET_SCHEDULE_CSS_BASE_PATH    = "#newpresSchedule > div > div > div > table > tbody > tr";
+	private static final String GET_SCHEDULE_CSS_BASE_PATH      = "#newpresSchedule > div > div > div > table > tbody > tr";
 
 	/** 信用残取得：アクセス先のURL */
-	private static final String GET_DEBIT_BALANCES_ACCESS_URL = "http://www.nikkei.com/markets/company/history/trust.aspx?scode=";
+	private static final String GET_DEBIT_BALANCES_ACCESS_URL   = "http://www.nikkei.com/markets/company/history/trust.aspx?scode=";
+
+	/** 企業指標取得：アクセス先のURL(yahoo) */
+	private static final String GET_INDICATORS_ACCESS_URL_YAHOO = "http://stocks.finance.yahoo.co.jp/stocks/detail/?code=";
+	/** 企業指標取得：アクセス先のURL(日経) */
+	private static final String GET_INDICATORS_ACCESS_URL_NIKKEI= "http://www.nikkei.com/markets/company/kessan/shihyo.aspx?scode=";
 
 	/**
 	 * 企業スケジュールを取得する。
@@ -55,7 +63,7 @@ public class ScrapingComponent {
 		String messagePrefix = "stockCode=" + stockCode;
 
 		URI postUrl = null;
-		CompanySchedulesEntity schedule = null;
+		CompanySchedulesEntity retEntity = null;
 
 		try {
 			postUrl = new URI(GET_SCHEDULE_ACCESS_URL);
@@ -98,20 +106,20 @@ public class ScrapingComponent {
 			}
 
 			if(html == null || html.length() < 0){
-				throw new ScrapingException("データ取得失敗しました。：" + messagePrefix);
+				throw new ScrapingException("データ取得に失敗しました。：" + messagePrefix);
 			}
 
 			Document document = Jsoup.parse(html);
 			// tableを読み込む
 			Elements tableTr = document.select(GET_SCHEDULE_CSS_BASE_PATH);
 			if(tableTr != null && tableTr.size() > 0){
-				schedule = new CompanySchedulesEntity();
-				schedule.stockCode         = Integer.parseInt(tableTr.select("td").eq(0).text().replaceAll(" |　| ", ""));
-				schedule.stockName         = tableTr.select("td").eq(1).text().replaceAll(" |　| ", "");
-				schedule.settlement        = tableTr.select("td").eq(3).text().replaceAll(" |　| ", "");
-				schedule.settlementDateStr = tableTr.select("th").eq(0).text().replaceAll(" |　| ", "");
-				schedule.settlementType    = tableTr.select("td").eq(4).text().replaceAll(" |　| ", "");
-				schedule.market            = tableTr.select("td").eq(6).text().replaceAll(" |　| ", "");
+				retEntity = new CompanySchedulesEntity();
+				retEntity.stockCode         = Integer.parseInt(tableTr.select("td").eq(0).text().replaceAll(" |　| ", ""));
+				retEntity.stockName         = tableTr.select("td").eq(1).text().replaceAll(" |　| ", "");
+				retEntity.settlement        = tableTr.select("td").eq(3).text().replaceAll(" |　| ", "");
+				retEntity.settlementDateStr = tableTr.select("th").eq(0).text().replaceAll(" |　| ", "");
+				retEntity.settlementType    = tableTr.select("td").eq(4).text().replaceAll(" |　| ", "");
+				retEntity.market            = tableTr.select("td").eq(6).text().replaceAll(" |　| ", "");
 			}else{
 				throw new ScrapingException("データ解析失敗しました。：" + messagePrefix);
 			}
@@ -120,7 +128,7 @@ public class ScrapingComponent {
 			throw new ScrapingException("HTTP POST リクエスト時にエラーが発生しました。：" + messagePrefix + ", postUrl=" + postUrl, e);
 		}
 
-		return schedule;
+		return retEntity;
 	}
 
 	/**
@@ -136,7 +144,7 @@ public class ScrapingComponent {
 		String messagePrefix = "stockCode=" + stockCode;
 
 		URI getUrl = null;
-		List<DebitBalancesEntity> retList = null;
+		List<DebitBalancesEntity> retEntityList = null;
 
 		try {
 			getUrl = new URI(GET_DEBIT_BALANCES_ACCESS_URL + stockCode);
@@ -169,7 +177,7 @@ public class ScrapingComponent {
 			}
 
 			if(html == null || html.length() < 0){
-				throw new ScrapingException("データ取得失敗しました。：" + messagePrefix);
+				throw new ScrapingException("データ取得に失敗しました。：" + messagePrefix);
 			}
 
 			Document document = Jsoup.parse(html);
@@ -177,7 +185,7 @@ public class ScrapingComponent {
 			Elements tableTrList = document.getElementsByClass("cmn-table_style1").select("tr");
 
 			if (tableTrList != null && tableTrList.size() > 0) {
-				retList = new ArrayList<DebitBalancesEntity>();
+				retEntityList = new ArrayList<DebitBalancesEntity>();
 				int tableTrSize = tableTrList.size();
 				for (int i = 1; i < tableTrSize; i++) {
 					Element trElement = tableTrList.get(i);
@@ -187,25 +195,230 @@ public class ScrapingComponent {
 					debitBalance.marginSellingBalance 	= trElement.select("td").eq(0).text().replaceAll(" |　| |,", "");
 					debitBalance.marginDebtBalance 		= trElement.select("td").eq(1).text().replaceAll(" |　| |,", "");
 					debitBalance.ratioMarginBalance 	= trElement.select("td").eq(2).text().replaceAll(" |　| ", "");
-					retList.add(debitBalance);
+					retEntityList.add(debitBalance);
 				}
 			}
 
 		} catch (IOException e) {
-			AppLogger.error("HTTP GET リクエスト時にエラーが発生しました。：getUrl=" + getUrl, e);
+			throw new ScrapingException("HTTP GET リクエスト時にエラーが発生しました。：getUrl=" + getUrl, e);
 		}
 
-		return retList;
+		return retEntityList;
 	}
 
-	public static void main(String[] args){
-		List<DebitBalancesEntity> debitBalanceList;
-		try {
-			debitBalanceList = getDebitBalances(1789);
+	/**
+	 * 企業指標を取得する。
+	 * @param stockCode 銘柄コード
+	 * @return 企業指標エンティティを返却する。
+	 * @throws ScrapingException スクレイピング時に発生する例外。
+	 * @since 1.0
+	 * @see IndicatorsEntity
+	 * @see ScrapingException
+	 */
+	public static IndicatorsEntity getIndicators(Integer stockCode) throws ScrapingException {
+		String messagePrefix = "stockCode=" + stockCode;
 
-			for (DebitBalancesEntity debitBalance : debitBalanceList) {
-				System.out.println(debitBalance.toString());
+		URI getUrl = null;
+		IndicatorsEntity retEntity = null;
+
+		try {
+			getUrl = new URI(GET_INDICATORS_ACCESS_URL_YAHOO + stockCode);
+		} catch (URISyntaxException e) {
+			throw new ScrapingException("URL作成に失敗しました。：" + messagePrefix, e);
+		}
+
+		HttpGet httpGet = new HttpGet(getUrl);
+
+		try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
+
+			String html = null;
+			try (CloseableHttpResponse response = httpClient.execute(httpGet)) {
+
+				int statusCode = response.getStatusLine().getStatusCode();
+				System.out.println("ステータスコード:" + statusCode);
+
+				switch (response.getStatusLine().getStatusCode()) {
+					case HttpStatus.SC_OK:
+						System.out.println("取得に成功しました。：" + messagePrefix + ", statusCode=" + statusCode);
+						html = EntityUtils.toString(response.getEntity(), "UTF-8");
+						break;
+
+					case HttpStatus.SC_NOT_FOUND:
+						throw new ScrapingException("データが存在しません。：" + messagePrefix + ", statusCode=" + statusCode);
+
+					default:
+						throw new ScrapingException("通信エラーが発生しました。：" + messagePrefix + ", statusCode=" + statusCode);
+				}
 			}
+
+			if(html == null || html.length() < 0){
+				throw new ScrapingException("データ取得に失敗しました。：" + messagePrefix);
+			}
+
+			Document document = Jsoup.parse(html);
+			// tableを読み込む
+			Elements tableTrList = document.getElementsByClass("chartFinance").select("dl");
+
+			if (tableTrList != null && tableTrList.size() > 0) {
+				retEntity = new IndicatorsEntity();
+
+				String regex = "((0|[-+]?[1-9][0-9]*)(\\.\\d+)?)";
+				Pattern pattern = Pattern.compile(regex);
+
+				int tableTrSize = tableTrList.size();
+				for (int i = 1; i < tableTrSize; i++) {
+					Element trElement = tableTrList.get(i);
+
+					String text = null;
+					if (trElement.toString().indexOf("配当利回り") > -1) {
+						text = trElement.select("strong").text().trim().replaceAll(",", "");
+						Matcher matcher = pattern.matcher(text);
+						if (matcher.find()) {
+							String matchStr = matcher.group(1);
+							System.out.println(text+" = "+matchStr);
+
+							retEntity.dividendYield = matchStr;
+						}
+
+					} else if (trElement.toString().indexOf("PER") > -1) {
+						text = trElement.select("strong").text().trim().replaceAll(",", "");
+						Matcher matcher = pattern.matcher(text);
+						if (matcher.find()) {
+							String matchStr = matcher.group(1);
+							System.out.println(text+" = "+matchStr);
+
+							retEntity.priceEarningsRatio = matchStr;
+						}
+
+					} else if (trElement.toString().indexOf("PBR") > -1) {
+						text = trElement.select("strong").text().trim().replaceAll(",", "");
+						Matcher matcher = pattern.matcher(text);
+						if (matcher.find()) {
+							String matchStr = matcher.group(1);
+							System.out.println(text+" = "+matchStr);
+
+							retEntity.priceBookValueRatio = matchStr;
+						}
+
+					} else if (trElement.toString().indexOf("EPS") > -1) {
+						text = trElement.select("strong").text().trim().replaceAll(",", "");
+						Matcher matcher = pattern.matcher(text);
+						if (matcher.find()) {
+							String matchStr = matcher.group(1);
+							System.out.println(text+" = "+matchStr);
+
+							retEntity.earningsPerShare = matchStr;
+						}
+
+					} else if (trElement.toString().indexOf("BPS") > -1) {
+						text = trElement.select("strong").text().trim().replaceAll(",", "");
+						Matcher matcher = pattern.matcher(text);
+						if (matcher.find()) {
+							String matchStr = matcher.group(1);
+							System.out.println(text+" = "+matchStr);
+
+							retEntity.bookValuePerShare = matchStr;
+						}
+
+					}
+				}
+
+				retEntity.stockCode = stockCode;
+
+				// PBR / PER = ROE
+				if (retEntity.priceBookValueRatio != null
+						&& retEntity.priceEarningsRatio != null
+						&& Double.parseDouble(retEntity.priceEarningsRatio) != 0) {
+
+					BigDecimal priceBookValueRatio = new BigDecimal(retEntity.priceBookValueRatio);
+					BigDecimal priceEarningsRatio = new BigDecimal(retEntity.priceEarningsRatio);
+
+					BigDecimal divide = priceBookValueRatio.divide(priceEarningsRatio, 25, BigDecimal.ROUND_HALF_UP);
+					BigDecimal answer = divide.multiply(new BigDecimal("100"));
+
+					retEntity.returnOnEquity = answer.toString();
+				}
+			}
+
+		} catch (IOException e) {
+			throw new ScrapingException("HTTP GET リクエスト時にエラーが発生しました。：getUrl=" + getUrl, e);
+		}
+
+		if (retEntity == null) {
+			throw new ScrapingException("データ取得に失敗しました。：" + messagePrefix);
+		}
+
+		try {
+			getUrl = new URI(GET_INDICATORS_ACCESS_URL_NIKKEI + stockCode);
+		} catch (URISyntaxException e) {
+			throw new ScrapingException("URL作成に失敗しました。：" + messagePrefix, e);
+		}
+
+		httpGet = new HttpGet(getUrl);
+
+		try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
+
+			String html = null;
+			try (CloseableHttpResponse response = httpClient.execute(httpGet)) {
+
+				int statusCode = response.getStatusLine().getStatusCode();
+				System.out.println("ステータスコード:" + statusCode);
+
+				switch (response.getStatusLine().getStatusCode()) {
+					case HttpStatus.SC_OK:
+						System.out.println("取得に成功しました。：" + messagePrefix + ", statusCode=" + statusCode);
+						html = EntityUtils.toString(response.getEntity(), "UTF-8");
+						break;
+
+					case HttpStatus.SC_NOT_FOUND:
+						throw new ScrapingException("データが存在しません。：" + messagePrefix + ", statusCode=" + statusCode);
+
+					default:
+						throw new ScrapingException("通信エラーが発生しました。：" + messagePrefix + ", statusCode=" + statusCode);
+				}
+			}
+
+			if(html == null || html.length() < 0){
+				throw new ScrapingException("データ取得に失敗しました。：" + messagePrefix);
+			}
+
+			Document document = Jsoup.parse(html);
+			// tableを読み込む
+			Elements tableTrList = document.getElementsByClass("cmn-table_style1").select("tr");
+			if (tableTrList != null && tableTrList.size() > 0) {
+
+				String regex = "((0|[-+]?[1-9][0-9]*)(\\.\\d+)?)";
+				Pattern pattern = Pattern.compile(regex);
+
+				int tableTrSize = tableTrList.size();
+				for (int i = 1; i < tableTrSize; i++) {
+					Element trElement = tableTrList.get(i);
+
+					String text = null;
+					if (trElement.toString().indexOf("自己資本比率") > -1) {
+						text = trElement.select("td").text().trim().replaceAll(",", "");
+						Matcher matcher = pattern.matcher(text);
+						if (matcher.find()) {
+							String matchStr = matcher.group(1);
+							System.out.println(text+" = "+matchStr);
+
+							retEntity.capitalRatio = matchStr;
+						}
+					}
+				}
+			}
+
+		} catch (IOException e) {
+			throw new ScrapingException("HTTP GET リクエスト時にエラーが発生しました。：getUrl=" + getUrl, e);
+		}
+		return retEntity;
+	}
+
+
+	public static void main(String[] args){
+		try {
+			IndicatorsEntity debitBalanceList = getIndicators(6753);
+			System.out.println(debitBalanceList.toString());
 		} catch (ScrapingException e) {
 			e.printStackTrace();
 		}
