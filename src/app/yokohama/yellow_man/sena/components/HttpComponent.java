@@ -19,7 +19,7 @@ import org.apache.http.util.EntityUtils;
  * @author yellow-man
  * @since 1.0
  */
-public class HttpComponents {
+public class HttpComponent {
 
 	/**
 	 * パラメータ{@code url}に対するHTTP GETリクエストを行い、body部を取得する。

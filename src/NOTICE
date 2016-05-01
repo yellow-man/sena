@@ -28,3 +28,7 @@ under the Apache License 2.0 (see: http://www.apache.org/licenses/LICENSE-2.0)
 -----
 The following software may be included in this application: Opencsv from http://opencsv.sourceforge.net/
 under the Apache License 2.0 (see: http://www.apache.org/licenses/LICENSE-2.0)
+
+-----
+The following software may be included in this application: Jsoup from https://jsoup.org/
+under the MIT license (see: http://www.opensource.org/licenses/mit-license.php)

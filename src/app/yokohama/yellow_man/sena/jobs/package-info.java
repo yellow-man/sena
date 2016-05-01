@@ -1,4 +1,4 @@
 /**
- * バッチクラスを管理する。
+ * バッチクラスを提供する。
  */
 package yokohama.yellow_man.sena.jobs;

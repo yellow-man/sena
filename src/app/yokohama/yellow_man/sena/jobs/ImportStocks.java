@@ -18,7 +18,7 @@ import play.Play;
 import yokohama.yellow_man.common_tools.ListUtils;
 import yokohama.yellow_man.common_tools.StringUtils;
 import yokohama.yellow_man.sena.components.AppLogger;
-import yokohama.yellow_man.sena.components.HttpComponents;
+import yokohama.yellow_man.sena.components.HttpComponent;
 import yokohama.yellow_man.sena.components.db.StocksComponent;
 import yokohama.yellow_man.sena.models.Stocks;
 
@@ -75,7 +75,7 @@ public class ImportStocks extends AppLoggerJob {
 		int error = 0;
 
 		// CSVファイル取得。
-		String body = HttpComponents.executeGet(IMPORT_STOCKS_CSV_URL);
+		String body = HttpComponent.executeGet(IMPORT_STOCKS_CSV_URL);
 		if (StringUtils.isEmptyWithTrim(body)) {
 			AppLogger.error("銘柄一覧CSV取り込みに失敗しました。リクエストURLを確認してください。：URL=" + IMPORT_STOCKS_CSV_URL);
 			return;
