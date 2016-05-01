@@ -15,5 +15,6 @@ libraryDependencies ++= Seq(
   "args4j"                    % "args4j"               % "2.33",
   "org.apache.httpcomponents" % "httpclient"           % "4.5.2",
   "net.sf.opencsv"            % "opencsv"              % "2.3",
-  "org.jsoup"                 % "jsoup"                % "1.9.1"
+  "org.jsoup"                 % "jsoup"                % "1.9.1",
+  "org.apache.commons"        % "commons-email"        % "1.4"
 )

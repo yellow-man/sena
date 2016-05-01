@@ -29,7 +29,13 @@ import yokohama.yellow_man.sena.models.Stocks;
  * @author yellow-man
  * @since 1.0
  */
-public class ImportStocks extends AppLoggerJob {
+public class ImportStocks extends AppLoggerMailJob {
+
+	/**
+	 * メールタイトル
+	 * {@code application.conf}ファイル{@code import_stocks.mail_title}キーにて値の変更可。
+	 */
+	private static final String IMPORT_STOCKS_MAIL_TITLE    = Play.application().configuration().getString("import_stocks.mail_title", "[sena]銘柄一覧インポートバッチ実行結果");
 
 	/**
 	 * 銘柄一覧インポートURL
@@ -41,7 +47,7 @@ public class ImportStocks extends AppLoggerJob {
 	 * CSVファイル出力path
 	 * {@code application.conf}ファイル{@code import_stocks.csv_file_path}キーにて値の変更可。
 	 */
-	private static final String IMPORT_STOCKS_CSV_FILE_PATH = Play.application().configuration().getString("import_stocks.csv_file_path", "./files/");
+	private static final String IMPORT_STOCKS_CSV_FILE_PATH = Play.application().configuration().getString("import_stocks.csv_file_path", "files/");
 	/**
 	 * CSVファイル名
 	 * {@code application.conf}ファイル{@code import_stocks.csv_file_name}キーにて値の変更可。
@@ -53,9 +59,11 @@ public class ImportStocks extends AppLoggerJob {
 	 * @since 1.0
 	 */
 	public ImportStocks() {
-		// ログ：ログファイル名
+		// メールタイトル
+		this.emailTitle  = IMPORT_STOCKS_MAIL_TITLE;
+		// ログファイル名
 		this.logFileName = getClass().getName() + "." + this.logDateFormat.format(new Date()) + ".log";
-		// ログ：ログファイルpath
+		// ログファイルpath
 		this.logFilePath = LOG_FILE_PATH + getClass().getName() + "/" + this.logFileName;
 	}
 

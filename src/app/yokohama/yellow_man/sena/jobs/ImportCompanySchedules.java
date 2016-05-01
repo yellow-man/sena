@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
+import play.Play;
 import yokohama.yellow_man.common_tools.DateUtils;
 import yokohama.yellow_man.common_tools.ListUtils;
 import yokohama.yellow_man.sena.components.AppLogger;
@@ -21,21 +22,29 @@ import yokohama.yellow_man.sena.models.Stocks;
  * 企業スケジュールインポートバッチクラス。
  * <p>銘柄情報（stocks）を元に企業スケジュールを取得し、
  * 企業スケジュール（company_schedules）テーブルにインポートする。
- *
+ * 相手方にアクセス負荷とならぬよう、1件取得ごとにランダムでインターバル(2秒～5秒)を設けている。
  *
  * @author yellow-man
  * @since 1.0
  */
-public class ImportCompanySchedules extends AppLoggerJob {
+public class ImportCompanySchedules extends AppLoggerMailJob {
+
+	/**
+	 * メールタイトル
+	 * {@code application.conf}ファイル{@code import_company_schedules.mail_title}キーにて値の変更可。
+	 */
+	private static final String IMPORT_STOCKS_MAIL_TITLE    = Play.application().configuration().getString("import_company_schedules.mail_title", "[sena]企業スケジュールインポートバッチ実行結果");
 
 	/**
 	 * 企業スケジュールインポートバッチクラスコンストラクタ。
 	 * @since 1.0
 	 */
 	public ImportCompanySchedules() {
-		// ログ：ログファイル名
+		// メールタイトル
+		this.emailTitle  = IMPORT_STOCKS_MAIL_TITLE;
+		// ログファイル名
 		this.logFileName = getClass().getName() + "." + this.logDateFormat.format(new Date()) + ".log";
-		// ログ：ログファイルpath
+		// ログファイルpath
 		this.logFilePath = LOG_FILE_PATH + getClass().getName() + "/" + this.logFileName;
 	}
 
@@ -121,8 +130,6 @@ public class ImportCompanySchedules extends AppLoggerJob {
 				}
 			}
 		}
-
-
 		AppLogger.info("銘柄一覧インポートバッチ　終了：処理件数=" + String.valueOf(success + error) + ", 成功件数=" + success + ", 失敗件数=" + error);
 	}
 
