@@ -54,7 +54,7 @@ public class ImportCompanySchedules extends AppLoggerMailJob {
 	 */
 	@Override
 	protected void run(List<String> args) {
-		AppLogger.info("銘柄一覧インポートバッチ　開始");
+		AppLogger.info("企業スケジュールインポートバッチ　開始");
 
 		// 現在日時
 		Date now = new Date();
@@ -62,6 +62,8 @@ public class ImportCompanySchedules extends AppLoggerMailJob {
 		int success = 0;
 		// エラー件数
 		int error = 0;
+		// スキップ件数
+		int skip = 0;
 
 		// 銘柄情報取得
 		List<Stocks> stocksList = StocksComponent.getStocksList();
@@ -95,6 +97,7 @@ public class ImportCompanySchedules extends AppLoggerMailJob {
 							AppLogger.warn(new StringBuffer("外部サイトから企業スケジュールが取得できませんでした。：")
 									.append(stockCode).append(":").append(stockName)
 									.toString());
+							skip++;
 							continue;
 
 						}
@@ -103,7 +106,12 @@ public class ImportCompanySchedules extends AppLoggerMailJob {
 								.toString());
 
 						// モデルに詰め替えDBに保存
-						_saveCompanySchedules(companySchedulesEntity);
+						boolean ret = _saveCompanySchedules(companySchedulesEntity);
+						if (ret) {
+							success++;
+						} else {
+							error++;
+						}
 
 					} catch (ScrapingException e) {
 
@@ -111,13 +119,16 @@ public class ImportCompanySchedules extends AppLoggerMailJob {
 						AppLogger.error(new StringBuffer("外部サイトから企業スケジュールが取得できませんでした。：")
 								.append(stockCode).append(":").append(stockName)
 								.toString(), e);
+
+						error++;
 						continue;
 					}
 
 				} else {
-					AppLogger.info(new StringBuffer("決算発表日から２ヶ月（６０日）経過経過していませんでした。：stockCode=").append(stockCode)
+					AppLogger.info(new StringBuffer("決算発表日から２ヶ月（６０日）経過していませんでした。：stockCode=").append(stockCode)
 							.append(", stockName=").append(stockName)
 							.toString());
+					skip++;
 				}
 
 				// インターバル(2秒～5秒)
@@ -130,18 +141,20 @@ public class ImportCompanySchedules extends AppLoggerMailJob {
 				}
 			}
 		}
-		AppLogger.info("銘柄一覧インポートバッチ　終了：処理件数=" + String.valueOf(success + error) + ", 成功件数=" + success + ", 失敗件数=" + error);
+		AppLogger.info("企業スケジュールインポートバッチ　終了：処理件数=" + String.valueOf(success + error + skip) + ", 成功件数=" + success + ", 失敗件数=" + error + ", スキップ件数=" + skip);
 	}
 
 	/**
 	 * エンティティから、モデルにデータを詰め替えDBに保存する。
 	 * @param companySchedulesEntity 企業スケジュールエンティティ
+	 * @return インポートが成功したら{@code true}、失敗したら{@code false}
 	 * @since 1.0
 	 */
-	private void _saveCompanySchedules(CompanySchedulesEntity companySchedulesEntity) {
+	private boolean _saveCompanySchedules(CompanySchedulesEntity companySchedulesEntity) {
+		boolean ret = false;
 		Integer stockCode = companySchedulesEntity.stockCode;
 
-		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy/m/d");
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DateUtils.DATE_FORMAT_YYYY_M_D);
 		CompanySchedules companySchedules = new CompanySchedules();
 		try {
 			companySchedules.settlementDate    = simpleDateFormat.parse(companySchedulesEntity.settlementDateStr);
@@ -152,10 +165,12 @@ public class ImportCompanySchedules extends AppLoggerMailJob {
 			companySchedules.modified          = new Date();
 			companySchedules.deleteFlg         = false;
 			companySchedules.save();
+			ret = true;
 		} catch (ParseException e) {
 			AppLogger.error("エンティティから、モデルにデータを詰め替え時にエラーが発生しました。：companySchedulesEntity.settlementDateStr=" + companySchedulesEntity.settlementDateStr, e);
 		} catch (Exception e) {
 			AppLogger.error("企業スケジュールDB保存時にエラーが発生しました。：companySchedulesEntity=" + companySchedulesEntity, e);
 		}
+		return ret;
 	}
 }

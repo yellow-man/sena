@@ -3,6 +3,7 @@ package yokohama.yellow_man.sena.jobs;
 import java.text.SimpleDateFormat;
 
 import play.Play;
+import yokohama.yellow_man.common_tools.DateUtils;
 import yokohama.yellow_man.sena.components.AppLogger;
 
 /**
@@ -19,7 +20,7 @@ public abstract class AppLoggerJob extends AppJob {
 	public static final String LOG_FILE_PATH = Play.application().configuration().getString("log.file.path", "logs/");
 
 	/** ログ：日付フォーマット（dd）1ヶ月分保持 */
-	protected SimpleDateFormat logDateFormat = new SimpleDateFormat("dd");
+	protected SimpleDateFormat logDateFormat = new SimpleDateFormat(DateUtils.DATE_FORMAT_DD);
 	/** ログ：ログファイル名 */
 	protected String logFileName = "";
 	/** ログ：ログファイルpath */
