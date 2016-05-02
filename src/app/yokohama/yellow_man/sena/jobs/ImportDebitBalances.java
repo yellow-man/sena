@@ -10,13 +10,13 @@ import org.apache.commons.lang3.math.NumberUtils;
 import play.Play;
 import yokohama.yellow_man.common_tools.DateUtils;
 import yokohama.yellow_man.common_tools.ListUtils;
-import yokohama.yellow_man.sena.components.AppLogger;
+import yokohama.yellow_man.module.components.AppLogger;
+import yokohama.yellow_man.module.models.DebitBalances;
+import yokohama.yellow_man.module.models.Stocks;
 import yokohama.yellow_man.sena.components.db.StocksComponent;
 import yokohama.yellow_man.sena.components.scraping.ScrapingComponent;
 import yokohama.yellow_man.sena.components.scraping.ScrapingException;
 import yokohama.yellow_man.sena.components.scraping.entity.DebitBalancesEntity;
-import yokohama.yellow_man.sena.models.DebitBalances;
-import yokohama.yellow_man.sena.models.Stocks;
 
 /**
  * 信用残インポートバッチクラス。

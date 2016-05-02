@@ -9,14 +9,15 @@ import java.util.Random;
 import play.Play;
 import yokohama.yellow_man.common_tools.DateUtils;
 import yokohama.yellow_man.common_tools.ListUtils;
-import yokohama.yellow_man.sena.components.AppLogger;
+import yokohama.yellow_man.module.components.AppLogger;
+import yokohama.yellow_man.module.definitions.AppConsts;
+import yokohama.yellow_man.module.models.CompanySchedules;
+import yokohama.yellow_man.module.models.Stocks;
 import yokohama.yellow_man.sena.components.db.CompanySchedulesComponent;
 import yokohama.yellow_man.sena.components.db.StocksComponent;
 import yokohama.yellow_man.sena.components.scraping.ScrapingComponent;
 import yokohama.yellow_man.sena.components.scraping.ScrapingException;
 import yokohama.yellow_man.sena.components.scraping.entity.CompanySchedulesEntity;
-import yokohama.yellow_man.sena.models.CompanySchedules;
-import yokohama.yellow_man.sena.models.Stocks;
 
 /**
  * 企業スケジュールインポートバッチクラス。
@@ -86,7 +87,7 @@ public class ImportCompanySchedules extends AppLoggerMailJob {
 				if (settlementDate == null || settlementDate.getTime() < now.getTime()) {
 
 					AppLogger.info(new StringBuffer("外部サイトから企業スケジュール取得を開始します。：")
-							.append(stockCode).append(":").append(stockName)
+							.append(stockCode).append("：").append(stockName)
 							.toString());
 					try {
 						// 外部サイトから企業スケジュールを取得
@@ -94,15 +95,15 @@ public class ImportCompanySchedules extends AppLoggerMailJob {
 						// 取得できない場合は、処理を飛ばす。
 						if (companySchedulesEntity == null) {
 
-							AppLogger.warn(new StringBuffer("外部サイトから企業スケジュールが取得できませんでした。：")
-									.append(stockCode).append(":").append(stockName)
+							AppLogger.warn(new StringBuffer("外部サイトから企業スケジュールが取得できませんでした。インポート処理をスキップします。：")
+									.append(stockCode).append("：").append(stockName)
 									.toString());
 							skip++;
 							continue;
 
 						}
 						AppLogger.info(new StringBuffer("外部サイトから企業スケジュールが取得できました。：")
-								.append(companySchedulesEntity.stockCode).append(":").append(companySchedulesEntity.stockName)
+								.append(companySchedulesEntity.stockCode).append("：").append(companySchedulesEntity.stockName)
 								.toString());
 
 						// モデルに詰め替えDBに保存
@@ -117,7 +118,7 @@ public class ImportCompanySchedules extends AppLoggerMailJob {
 
 						// 取得できない場合は、処理を飛ばす。
 						AppLogger.error(new StringBuffer("外部サイトから企業スケジュールが取得できませんでした。：")
-								.append(stockCode).append(":").append(stockName)
+								.append(stockCode).append("：").append(stockName)
 								.toString(), e);
 
 						error++;
@@ -125,7 +126,7 @@ public class ImportCompanySchedules extends AppLoggerMailJob {
 					}
 
 				} else {
-					AppLogger.info(new StringBuffer("決算発表日から２ヶ月（６０日）経過していませんでした。：stockCode=").append(stockCode)
+					AppLogger.info(new StringBuffer("決算発表日から２ヶ月（６０日）経過していませんでした。取得処理をスキップします。：stockCode=").append(stockCode)
 							.append(", stockName=").append(stockName)
 							.toString());
 					skip++;
@@ -160,7 +161,7 @@ public class ImportCompanySchedules extends AppLoggerMailJob {
 			companySchedules.settlementDate    = simpleDateFormat.parse(companySchedulesEntity.settlementDateStr);
 			companySchedules.stockCode         = stockCode;
 			companySchedules.settlement        = companySchedulesEntity.settlement;
-			companySchedules.settlementTypesId = CompanySchedules.SETTLEMENT_TYPES_ID_MAP.get(companySchedulesEntity.settlementType);
+			companySchedules.settlementTypesId = AppConsts.SETTLEMENT_TYPES_ID_MAP.get(companySchedulesEntity.settlementType);
 			companySchedules.created           = new Date();
 			companySchedules.modified          = new Date();
 			companySchedules.deleteFlg         = false;

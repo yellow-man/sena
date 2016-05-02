@@ -3,7 +3,7 @@ package yokohama.yellow_man.sena.jobs;
 import java.util.Date;
 import java.util.List;
 
-import yokohama.yellow_man.sena.components.AppLogger;
+import yokohama.yellow_man.module.components.AppLogger;
 
 /**
  * バッチ処理テストクラス。

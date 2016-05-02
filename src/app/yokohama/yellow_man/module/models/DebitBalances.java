@@ -1,4 +1,4 @@
-package yokohama.yellow_man.sena.models;
+package yokohama.yellow_man.module.models;
 
 import java.math.BigDecimal;
 import java.util.Date;

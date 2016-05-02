@@ -17,10 +17,10 @@ import au.com.bytecode.opencsv.CSVReader;
 import play.Play;
 import yokohama.yellow_man.common_tools.ListUtils;
 import yokohama.yellow_man.common_tools.StringUtils;
-import yokohama.yellow_man.sena.components.AppLogger;
-import yokohama.yellow_man.sena.components.HttpComponent;
+import yokohama.yellow_man.module.components.AppLogger;
+import yokohama.yellow_man.module.components.HttpComponent;
+import yokohama.yellow_man.module.models.Stocks;
 import yokohama.yellow_man.sena.components.db.StocksComponent;
-import yokohama.yellow_man.sena.models.Stocks;
 
 /**
  * 銘柄一覧インポートバッチクラス。

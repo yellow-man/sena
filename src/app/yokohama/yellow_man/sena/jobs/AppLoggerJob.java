@@ -4,7 +4,7 @@ import java.text.SimpleDateFormat;
 
 import play.Play;
 import yokohama.yellow_man.common_tools.DateUtils;
-import yokohama.yellow_man.sena.components.AppLogger;
+import yokohama.yellow_man.module.components.AppLogger;
 
 /**
  * バッチ処理固有のログ出力を行う基底クラス。

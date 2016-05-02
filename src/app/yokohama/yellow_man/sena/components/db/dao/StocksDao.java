@@ -6,8 +6,8 @@ import java.util.List;
 import com.avaje.ebean.Ebean;
 import com.avaje.ebean.SqlUpdate;
 
+import yokohama.yellow_man.module.models.Stocks;
 import yokohama.yellow_man.sena.components.db.StocksComponent;
-import yokohama.yellow_man.sena.models.Stocks;
 
 /**
  * 銘柄（stocks）モデルのネイティブクエリによる操作クラス。

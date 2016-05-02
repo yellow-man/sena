@@ -1,4 +1,4 @@
-package yokohama.yellow_man.sena.components;
+package yokohama.yellow_man.module.components;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -48,7 +48,7 @@ public class HttpComponent {
 	}
 
 	/**
-	 * [TODO yellow-man]未実装 パラメータ{@code url}に対するHTTP POSTリクエストを行い、body部を取得する。
+	 * TODO 未実装 パラメータ{@code url}に対するHTTP POSTリクエストを行い、body部を取得する。
 	 * @param url URL
 	 * @return 本文（リクエストエラーが発生した場合、{@code null}を返却）
 	 * @since 1.0
