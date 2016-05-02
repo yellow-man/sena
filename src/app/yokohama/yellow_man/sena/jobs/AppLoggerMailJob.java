@@ -1,10 +1,9 @@
 package yokohama.yellow_man.sena.jobs;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 
+import org.apache.commons.io.input.ReversedLinesFileReader;
 import org.apache.commons.mail.MultiPartEmail;
 
 import play.Play;
@@ -56,7 +55,7 @@ public abstract class AppLoggerMailJob extends AppLoggerJob {
 		// 以降のログはapplication.logとして出力される。
 		super._finally();
 
-		BufferedReader bufferedReader = null;
+		ReversedLinesFileReader reversedLinesFileReader = null;
 		try {
 			// メール送信フラグがONの場合送信
 			if (this.isJobMail) {
@@ -71,16 +70,18 @@ public abstract class AppLoggerMailJob extends AppLoggerJob {
 				AppLogger.info(new StringBuffer("title                = ").append(this.emailTitle).toString());
 				AppLogger.info(new StringBuffer("body(logFilePath)    = ").append(this.logFilePath).toString());
 
-				// ログファイルから本文を取得
+				// ログファイルから本文を取得（末尾から最大30行）
 				File file = new File(this.logFilePath);
-				bufferedReader = new BufferedReader(new FileReader(file));
+				reversedLinesFileReader = new ReversedLinesFileReader(file);
 				StringBuffer buff = new StringBuffer();
-				String str = bufferedReader.readLine();
-				while(str != null){
-					str = bufferedReader.readLine();
-					buff.append(str);
+				String str = reversedLinesFileReader.readLine();
+				int i = 0;
+				while (str != null && i < 30) {
+					buff.insert(0, str + System.lineSeparator());
+					str = reversedLinesFileReader.readLine();
+					i++;
 				}
-				bufferedReader.close();
+				reversedLinesFileReader.close();
 
 				MultiPartEmail email = new MultiPartEmail();
 
@@ -122,9 +123,9 @@ public abstract class AppLoggerMailJob extends AppLoggerJob {
 			AppLogger.error("メール送信処理に失敗しました。", e);
 
 		} finally {
-			if (bufferedReader != null) {
+			if (reversedLinesFileReader != null) {
 				try {
-					bufferedReader.close();
+					reversedLinesFileReader.close();
 				} catch (IOException e) {
 					AppLogger.error("BufferedReaderクローズ処理に失敗しました。", e);
 				}
