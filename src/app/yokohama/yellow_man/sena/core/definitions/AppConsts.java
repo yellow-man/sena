@@ -1,4 +1,4 @@
-package yokohama.yellow_man.module.definitions;
+package yokohama.yellow_man.sena.core.definitions;
 
 import java.util.Collections;
 import java.util.HashMap;

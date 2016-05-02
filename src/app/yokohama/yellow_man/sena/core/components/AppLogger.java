@@ -1,4 +1,4 @@
-package yokohama.yellow_man.module.components;
+package yokohama.yellow_man.sena.core.components;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;

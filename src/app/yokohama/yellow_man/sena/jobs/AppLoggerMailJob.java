@@ -9,7 +9,7 @@ import org.apache.commons.mail.MultiPartEmail;
 
 import play.Play;
 import yokohama.yellow_man.common_tools.StringUtils;
-import yokohama.yellow_man.module.components.AppLogger;
+import yokohama.yellow_man.sena.core.components.AppLogger;
 
 /**
  * バッチ処理ごとの個別ログを管理者にメール配信する基底クラス。
