@@ -6,6 +6,8 @@ import java.io.IOException;
 import org.apache.commons.io.input.ReversedLinesFileReader;
 import org.apache.commons.mail.MultiPartEmail;
 
+import com.google.common.base.Charsets;
+
 import play.Play;
 import yokohama.yellow_man.common_tools.StringUtils;
 import yokohama.yellow_man.sena.core.components.AppLogger;
@@ -72,7 +74,7 @@ public abstract class AppLoggerMailJob extends AppLoggerJob {
 
 				// ログファイルから本文を取得（末尾から最大30行）
 				File file = new File(this.logFilePath);
-				reversedLinesFileReader = new ReversedLinesFileReader(file);
+				reversedLinesFileReader = new ReversedLinesFileReader(file, Charsets.UTF_8);
 				StringBuffer buff = new StringBuffer();
 				String str = reversedLinesFileReader.readLine();
 				int i = 0;
@@ -82,6 +84,7 @@ public abstract class AppLoggerMailJob extends AppLoggerJob {
 					i++;
 				}
 				reversedLinesFileReader.close();
+				buff.insert(0, this.getClass().getName() + System.lineSeparator() + System.lineSeparator());
 
 				MultiPartEmail email = new MultiPartEmail();
 

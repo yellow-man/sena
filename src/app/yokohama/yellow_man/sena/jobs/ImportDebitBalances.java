@@ -60,6 +60,8 @@ public class ImportDebitBalances extends AppLoggerMailJob {
 		int success = 0;
 		// エラー件数
 		int error = 0;
+		// スキップ件数
+		int skip = 0;
 
 		// 銘柄情報取得
 		List<Stocks> stocksList = StocksComponent.getStocksList();
@@ -76,12 +78,20 @@ public class ImportDebitBalances extends AppLoggerMailJob {
 					// 外部サイトから信用残を取得
 					List<DebitBalancesEntity> debitBalancesEntityList = ScrapingComponent.getDebitBalances(stockCode);
 
-					// モデルに詰め替えDBに保存
-					boolean ret = _saveDebitBalances(debitBalancesEntityList);
-					if (ret) {
-						success++;
+					if (ListUtils.isEmpty(debitBalancesEntityList)) {
+						AppLogger.warn(new StringBuffer("信用残リストが取得できませんでした。：")
+								.append(stockCode).append(":").append(stockName)
+								.toString());
+
+						skip++;
 					} else {
-						error++;
+						// モデルに詰め替えDBに保存
+						boolean ret = _saveDebitBalances(debitBalancesEntityList);
+						if (ret) {
+							success++;
+						} else {
+							error++;
+						}
 					}
 
 				} catch (ScrapingException e) {
@@ -105,7 +115,7 @@ public class ImportDebitBalances extends AppLoggerMailJob {
 				}
 			}
 		}
-		AppLogger.info("信用残インポートバッチ　終了：処理件数=" + String.valueOf(success + error) + ", 成功件数=" + success + ", 失敗件数=" + error);
+		AppLogger.info("信用残インポートバッチ　終了：処理件数=" + String.valueOf(success + error + skip) + ", 成功件数=" + success + ", 失敗件数=" + error + ", スキップ件数=" + skip);
 	}
 
 	/**
