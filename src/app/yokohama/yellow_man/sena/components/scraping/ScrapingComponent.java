@@ -25,6 +25,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import yokohama.yellow_man.common_tools.DateUtils;
 import yokohama.yellow_man.sena.components.scraping.entity.CompanySchedulesEntity;
 import yokohama.yellow_man.sena.components.scraping.entity.DebitBalancesEntity;
 import yokohama.yellow_man.sena.components.scraping.entity.IndicatorsEntity;
@@ -191,7 +192,8 @@ public class ScrapingComponent {
 					Element trElement = tableTrList.get(i);
 					DebitBalancesEntity debitBalance = new DebitBalancesEntity();
 					debitBalance.stockCode 				= stockCode;
-					debitBalance.releaseDate 			= trElement.select("th").eq(0).text().replaceAll(" |　| ", "");
+					debitBalance.releaseDateStr 		= trElement.select("th").eq(0).text().replaceAll(" |　| ", "");
+					debitBalance.releaseDate 			= DateUtils.toDate(debitBalance.releaseDateStr, DateUtils.DATE_FORMAT_YYYY_M_D);
 					debitBalance.marginSellingBalance 	= trElement.select("td").eq(0).text().replaceAll(" |　| |,", "");
 					debitBalance.marginDebtBalance 		= trElement.select("td").eq(1).text().replaceAll(" |　| |,", "");
 					debitBalance.ratioMarginBalance 	= trElement.select("td").eq(2).text().replaceAll(" |　| ", "");

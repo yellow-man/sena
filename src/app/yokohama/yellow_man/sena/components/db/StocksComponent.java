@@ -6,6 +6,7 @@ package yokohama.yellow_man.sena.components.db;
  *
  * @author yellow-man
  * @since 1.0
+ * @see yokohama.yellow_man.sena.core.components.db.StocksComponent
  */
 public class StocksComponent extends yokohama.yellow_man.sena.core.components.db.StocksComponent {
 }

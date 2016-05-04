@@ -1,5 +1,6 @@
 package yokohama.yellow_man.common_tools;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -49,5 +50,27 @@ public class DateUtils {
 		// 日数を加算
 		cal.add(Calendar.DATE, day);
 		return cal.getTime();
+	}
+
+
+	/**
+	 * 引数{@code dateStr}を引数指定フォーマット{@code formatStr}で{@link Date}に変換します。
+	 * 変換に失敗した場合は、{@code null}を返します。
+	 *
+	 * @param dateStr 日付文字列
+	 * @param formatStr 日付フォーマット
+	 * @return 変換後の{@link Date}オブジェクト（変換に失敗した場合は、{@code null}を返します。）
+	 * @since 1.0
+	 */
+	public static Date toDate(String dateStr, String formatStr) {
+		Date date = null;
+		try {
+			SimpleDateFormat sdf = new SimpleDateFormat(formatStr);
+			date = sdf.parse(dateStr);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+		return date;
 	}
 }

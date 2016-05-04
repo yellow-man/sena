@@ -1,6 +1,5 @@
 package yokohama.yellow_man.sena.jobs;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
@@ -8,8 +7,8 @@ import java.util.Random;
 import org.apache.commons.lang3.math.NumberUtils;
 
 import play.Play;
-import yokohama.yellow_man.common_tools.DateUtils;
 import yokohama.yellow_man.common_tools.ListUtils;
+import yokohama.yellow_man.sena.components.db.DebitBalancesComponent;
 import yokohama.yellow_man.sena.components.db.StocksComponent;
 import yokohama.yellow_man.sena.components.scraping.ScrapingComponent;
 import yokohama.yellow_man.sena.components.scraping.ScrapingException;
@@ -85,12 +84,21 @@ public class ImportDebitBalances extends AppLoggerMailJob {
 
 						skip++;
 					} else {
+
 						// モデルに詰め替えDBに保存
-						boolean ret = _saveDebitBalances(debitBalancesEntityList);
-						if (ret) {
-							success++;
-						} else {
-							error++;
+						int ret = _saveDebitBalances(stockCode, debitBalancesEntityList);
+						switch (ret) {
+							case 0:
+								success++;
+								break;
+
+							case 1:
+								error++;
+								break;
+
+							case 2:
+								skip++;
+								break;
 						}
 					}
 
@@ -121,18 +129,30 @@ public class ImportDebitBalances extends AppLoggerMailJob {
 	/**
 	 * エンティティから、モデルにデータを詰め替えDBに保存する。
 	 * 時間はかかるが、バルクインサートは使用せず1件ずつ処理を行う。
+	 *
+	 * @param stockCode 銘柄コード
 	 * @param debitBalancesEntityList 信用残エンティティのリスト
-	 * @return 1件インポートが成功したら{@code true}、全件失敗したら{@code false}
+	 * @return 1件インポートが成功したら（0..成功）、ただし例外が発生していたら（1..失敗）、1件も処理しなかったら（2..スキップ）
 	 * @since 1.0
 	 */
-	private boolean _saveDebitBalances(List<DebitBalancesEntity> debitBalancesEntityList) {
-		boolean ret = false;
-		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DateUtils.DATE_FORMAT_YYYY_M_D);
+	private int _saveDebitBalances(Integer stockCode, List<DebitBalancesEntity> debitBalancesEntityList) {
+		int ret = 2;
+
+		// 登録済みの信用残を取得する。
+		List<Long> releaseDateTimeList = DebitBalancesComponent.getReleaseDateTimeByStockCode(stockCode);
 
 		for (DebitBalancesEntity debitBalancesEntity : debitBalancesEntityList) {
+			Date releaseDate = debitBalancesEntity.releaseDate;
+
+			if (releaseDate == null
+					|| (releaseDateTimeList != null && releaseDateTimeList.contains(Long.valueOf(releaseDate.getTime())))) {
+				AppLogger.info("日付が変換できないか、既に登録済みの為処理をスキップしました。：debitBalancesEntity=" + debitBalancesEntity);
+				continue;
+			}
+
 			DebitBalances debitBalances = new DebitBalances();
 			try {
-				debitBalances.releaseDate          = simpleDateFormat.parse(debitBalancesEntity.releaseDate);
+				debitBalances.releaseDate          = debitBalancesEntity.releaseDate;
 				debitBalances.stockCode            = debitBalancesEntity.stockCode;
 				debitBalances.marginSellingBalance = NumberUtils.toInt(debitBalancesEntity.marginSellingBalance, -1);
 				debitBalances.marginDebtBalance    = NumberUtils.toInt(debitBalancesEntity.marginDebtBalance, -1);
@@ -141,9 +161,14 @@ public class ImportDebitBalances extends AppLoggerMailJob {
 				debitBalances.modified             = new Date();
 				debitBalances.deleteFlg            = false;
 				debitBalances.save();
-				ret = true;
+
+				// 例外が発生していたら、失敗として扱う
+				if (ret != 1) {
+					ret = 0;
+				}
 			} catch (Exception e) {
-				AppLogger.error("信用残DB保存時にエラーが発生しました。：debitBalancesEntityList=" + debitBalancesEntityList, e);
+				AppLogger.error("信用残DB保存時にエラーが発生しました。：debitBalancesEntity=" + debitBalancesEntity, e);
+				ret = 1;
 			}
 		}
 		return ret;
