@@ -13,7 +13,7 @@ public class IndicatorsEntity extends EntityBase {
 	public String date;
 
 	/** 銘柄コード */
-	public int stockCode;
+	public Integer stockCode;
 
 	/** 配当利回り */
 	public String dividendYield;

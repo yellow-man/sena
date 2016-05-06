@@ -39,4 +39,23 @@ public class AppConsts {
 		}
 	});
 
+	/**
+	 * 決算期タイプを取得する。
+	 * @param str 決算種別を表す文字列
+	 * @return 決算種別
+	 * @since 1.0
+	 */
+	public static Integer getSettlementType(String str){
+		if(str.indexOf("通期") > -1){
+			return SETTLEMENT_TYPES_ID_4;
+		}else if(str.indexOf("第3四") > -1){
+			return SETTLEMENT_TYPES_ID_3;
+		}else if(str.indexOf("第2四") > -1){
+			return SETTLEMENT_TYPES_ID_2;
+		}else if(str.indexOf("第1四") > -1){
+			return SETTLEMENT_TYPES_ID_1;
+		}
+		return null;
+	}
+
 }

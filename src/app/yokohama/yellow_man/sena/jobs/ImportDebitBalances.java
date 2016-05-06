@@ -75,7 +75,7 @@ public class ImportDebitBalances extends AppLoggerMailJob {
 				try {
 
 					// 外部サイトから信用残を取得
-					List<DebitBalancesEntity> debitBalancesEntityList = ScrapingComponent.getDebitBalances(stockCode);
+					List<DebitBalancesEntity> debitBalancesEntityList = ScrapingComponent.getDebitBalancesList(stockCode);
 
 					if (ListUtils.isEmpty(debitBalancesEntityList)) {
 						AppLogger.warn(new StringBuffer("信用残リストが取得できませんでした。：")
