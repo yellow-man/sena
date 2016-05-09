@@ -40,3 +40,7 @@ under the Apache License 2.0 (see: http://www.apache.org/licenses/LICENSE-2.0)
 -----
 The following software may be included in this application: Apache Commons IO from http://commons.apache.org/proper/commons-io/
 under the Apache License 2.0 (see: http://www.apache.org/licenses/LICENSE-2.0)
+
+-----
+The following software may be included in this application: Calendar API V3 Rev180 1.22.0 from https://developers.google.com/google-apps/calendar/
+under the Apache License 2.0 (see: http://www.apache.org/licenses/LICENSE-2.0)
