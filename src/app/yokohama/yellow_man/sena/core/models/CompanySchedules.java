@@ -31,4 +31,8 @@ public class CompanySchedules extends AppModel {
 	@Column(name = "settlement_types_id")
 	public Integer settlementTypesId;
 
+	/** カレンダー登録済みフラグ（1：登録済み、0：未登録） */
+	@Column(name = "reg_calendar_flg")
+	public Boolean regCalendarFlg;
+
 }
