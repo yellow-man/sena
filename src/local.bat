@@ -1,1 +1,1 @@
-java -cp ./target/universal/stage/lib/* -Dconfig.file=./target/universal/stage/conf/application-local.conf -Dlogger.file=./target/universal/stage/conf/logger-local.xml -Dfile.encoding=utf-8 yokohama.yellow_man.sena.jobs.JobExecutor %~1
+java -cp ./target/universal/stage/lib/* -Dconfig.file=./target/universal/stage/conf/application-local-dev.conf -Dlogger.file=./target/universal/stage/conf/logger-local.xml -Dfile.encoding=utf-8 yokohama.yellow_man.sena.jobs.JobExecutor %~1
