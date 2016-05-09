@@ -1,6 +1,6 @@
-key
 logs
 files
+conf/key
 conf/application-production.conf
 project/project
 project/target
