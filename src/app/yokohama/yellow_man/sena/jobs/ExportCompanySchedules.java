@@ -20,6 +20,7 @@ import yokohama.yellow_man.sena.core.models.ext.CompanySchedulesWithStocks;
  * <li>requests/day：1,000,000
  * <li>requests/100seconds/user：500
  * </ul>
+ * レイトリミットに掛からないよう、1秒1件のペースで処理を行う。
  *
  * @author yellow-man
  * @since 1.0
@@ -103,6 +104,13 @@ public class ExportCompanySchedules extends AppLoggerMailJob {
 							.toString(), e);
 
 					error++;
+				}
+
+				// インターバル(1秒)
+				try {
+					Thread.sleep(1000 * 1);
+				} catch (InterruptedException e) {
+					AppLogger.error("インターバル取得時にエラーが発生しました。", e);
 				}
 			}
 		}
