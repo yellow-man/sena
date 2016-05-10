@@ -1,7 +1,9 @@
 package yokohama.yellow_man.sena.core.definitions;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -36,6 +38,26 @@ public class AppConsts {
 			put("第２", SETTLEMENT_TYPES_ID_2);
 			put("第３", SETTLEMENT_TYPES_ID_3);
 			put("本"  , SETTLEMENT_TYPES_ID_4);
+		}
+	});
+
+	/** 決算種別：マッピング */
+	public static final Map<Integer, String> SETTLEMENT_TYPES_ID_MAP_STR = Collections.unmodifiableMap(new HashMap<Integer, String>() {
+		{
+			put(SETTLEMENT_TYPES_ID_1, "第１");
+			put(SETTLEMENT_TYPES_ID_2, "第２");
+			put(SETTLEMENT_TYPES_ID_3, "第３");
+			put(SETTLEMENT_TYPES_ID_4, "本");
+		}
+	});
+
+	/** 決算種別：リスト */
+	public static final List<Integer> SETTLEMENT_TYPES_ID_LIST = Collections.unmodifiableList(new ArrayList<Integer>() {
+		{
+			add(SETTLEMENT_TYPES_ID_1);
+			add(SETTLEMENT_TYPES_ID_2);
+			add(SETTLEMENT_TYPES_ID_3);
+			add(SETTLEMENT_TYPES_ID_4);
 		}
 	});
 

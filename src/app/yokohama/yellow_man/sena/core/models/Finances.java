@@ -39,15 +39,15 @@ public class Finances extends AppModel {
 	@Column(name = "net_profit")
 	public Integer netProfit;
 
-	/** 売上高（前年比、整数部：5桁、小数部：20桁） */
+	/** 売上高（前年比、整数部：10桁、小数部：20桁） */
 	@Column(name = "sales_rate")
 	public BigDecimal salesRate;
 
-	/** 営業益（前年比、整数部：5桁、小数部：20桁） */
+	/** 営業益（前年比、整数部：10桁、小数部：20桁） */
 	@Column(name = "operating_profit_rate")
 	public BigDecimal operatingProfitRate;
 
-	/** 純利益（前年比、整数部：5桁、小数部：20桁） */
+	/** 純利益（前年比、整数部：10桁、小数部：20桁） */
 	@Column(name = "net_profit_rate")
 	public BigDecimal netProfitRate;
 
