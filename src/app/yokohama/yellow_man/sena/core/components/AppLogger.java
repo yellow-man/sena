@@ -41,7 +41,7 @@ public class AppLogger {
 	public static final String MDC_FORMAT_KEY_FILELINE  = "fileline";
 
 	/** Logger定義 */
-	private static ch.qos.logback.classic.Logger MY_LOGGER = (ch.qos.logback.classic.Logger) LoggerFactory.getLogger(APP_LOGGER_NAME);
+	private static Logger MY_LOGGER = (Logger) LoggerFactory.getLogger(APP_LOGGER_NAME);
 
 	/**
 	 * 新しくFileAppender定義したロガーに差し替える。
@@ -83,7 +83,7 @@ public class AppLogger {
 	 */
 	public static void resetLogger() {
 		// ロガーの差し替え
-		MY_LOGGER = (ch.qos.logback.classic.Logger) LoggerFactory.getLogger(APP_LOGGER_NAME);
+		MY_LOGGER = (Logger) LoggerFactory.getLogger(APP_LOGGER_NAME);
 	}
 
 	/**
@@ -98,11 +98,13 @@ public class AppLogger {
 	 * @since 1.0
 	 */
 	public static void error(String message) {
-		putMDC(MDC_FORMAT_KEY_FILELINE, printFileLine());
-		MY_LOGGER.error(message);
+		if (MY_LOGGER.isErrorEnabled()) {
+			putMDC(MDC_FORMAT_KEY_FILELINE, printFileLine());
+			MY_LOGGER.error(message);
 
-		// キーの破棄
-		removeMDC(MDC_FORMAT_KEY_FILELINE);
+			// キーの破棄
+			removeMDC(MDC_FORMAT_KEY_FILELINE);
+		}
 	}
 
 	/**
@@ -118,11 +120,13 @@ public class AppLogger {
 	 * @since 1.0
 	 */
 	public static void error(String message, Throwable t) {
-		putMDC(MDC_FORMAT_KEY_FILELINE, printFileLine());
-		MY_LOGGER.error(message, t);
+		if (MY_LOGGER.isErrorEnabled()) {
+			putMDC(MDC_FORMAT_KEY_FILELINE, printFileLine());
+			MY_LOGGER.error(message, t);
 
-		// キーの破棄
-		removeMDC(MDC_FORMAT_KEY_FILELINE);
+			// キーの破棄
+			removeMDC(MDC_FORMAT_KEY_FILELINE);
+		}
 	}
 
 	/**
@@ -136,11 +140,13 @@ public class AppLogger {
 	 * @since 1.0
 	 */
 	public static void warn(String message) {
-		putMDC(MDC_FORMAT_KEY_FILELINE, printFileLine());
-		MY_LOGGER.warn(message);
+		if (MY_LOGGER.isWarnEnabled()) {
+			putMDC(MDC_FORMAT_KEY_FILELINE, printFileLine());
+			MY_LOGGER.warn(message);
 
-		// キーの破棄
-		removeMDC(MDC_FORMAT_KEY_FILELINE);
+			// キーの破棄
+			removeMDC(MDC_FORMAT_KEY_FILELINE);
+		}
 	}
 
 	/**
@@ -154,11 +160,13 @@ public class AppLogger {
 	 * @since 1.0
 	 */
 	public static void info(String message) {
-		putMDC(MDC_FORMAT_KEY_FILELINE, printFileLine());
-		MY_LOGGER.info(message);
+		if (MY_LOGGER.isInfoEnabled()) {
+			putMDC(MDC_FORMAT_KEY_FILELINE, printFileLine());
+			MY_LOGGER.info(message);
 
-		// キーの破棄
-		removeMDC(MDC_FORMAT_KEY_FILELINE);
+			// キーの破棄
+			removeMDC(MDC_FORMAT_KEY_FILELINE);
+		}
 	}
 
 	/**
@@ -171,11 +179,13 @@ public class AppLogger {
 	 * @since 1.0
 	 */
 	public static void debug(String message) {
-		putMDC(MDC_FORMAT_KEY_FILELINE, printFileLine());
-		MY_LOGGER.debug(message);
+		if (MY_LOGGER.isDebugEnabled()) {
+			putMDC(MDC_FORMAT_KEY_FILELINE, printFileLine());
+			MY_LOGGER.debug(message);
 
-		// キーの破棄
-		removeMDC(MDC_FORMAT_KEY_FILELINE);
+			// キーの破棄
+			removeMDC(MDC_FORMAT_KEY_FILELINE);
+		}
 	}
 
 	/**

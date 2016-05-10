@@ -17,6 +17,24 @@
 		</encoder>
 	</appender>
 
+	<appender name="FILE_ERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>/var/log/sena/logs/application_error.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>/var/log/sena/logs/application_error.%d{dd}.log</fileNamePattern>
+			<maxHistory>14</maxHistory>
+		</rollingPolicy>
+
+		<encoder>
+			<pattern>[%date{yyyy-MM-dd HH:mm:ss:SSS}] [%level] [%.5thread] [%logger] [%X{fileline}] [%msg] %xEx%n</pattern>
+		</encoder>
+
+		<filter class="ch.qos.logback.classic.filter.LevelFilter">
+			<level>ERROR</level>
+			<onMatch>ACCEPT</onMatch>
+			<onMismatch>DENY</onMismatch>
+		</filter>
+	</appender>
+
 	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
 		<encoder>
 			<pattern>[%date{yyyy-MM-dd HH:mm:ss:SSS}] [%level] [%.5thread] [%logger] [%X{fileline}] [%msg] %xEx%n</pattern>
@@ -34,6 +52,7 @@
 
 	<root level="DEBUG">
 		<appender-ref ref="FILE" />
+		<appender-ref ref="FILE_ERROR" />
 	</root>
 
 	<logger name="AppLogger" level="DEBUG" />
