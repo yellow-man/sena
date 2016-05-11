@@ -11,7 +11,7 @@
 
 を収集します。
 
-また、「企業決算スケジュール情報」においては収集した情報を、  
+また「企業決算スケジュール情報」において、収集した情報を  
 特定のGoogle カレンダーへイベント登録します。
 
 * [決算スケジュール | Google カレンダー 実運用のサンプル](https://calendar.google.com/calendar/embed?src=24qrq6gcmnq39tep0bvjfjf9o8%40group.calendar.google.com&ctz=Asia/Tokyo "決算スケジュール | Google カレンダー 実運用のサンプル")
