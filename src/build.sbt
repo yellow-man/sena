@@ -1,4 +1,4 @@
-name := """sena"""
+name := """sena-batch"""
 
 version := "0.0.1"
 
