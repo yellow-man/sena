@@ -1,6 +1,6 @@
-name := """sena-batch"""
+name := """sena"""
 
-version := "0.0.1"
+version := "1.0.0-batch1.0"
 
 lazy val root = (project in file(".")).enablePlugins(PlayJava)
 

@@ -59,7 +59,7 @@ Play Framework 2.3ベースのバッチアプリケーションです。
 
 ## 更新履歴（Version history）
 
-* [sena1.0.0-batch1.0](https://office.yellow-man.yokohama/redmine/versions/1) リリース yyyy/MM/dd
+* [sena-1.0.0-batch1.0](https://office.yellow-man.yokohama/redmine/versions/1) リリース yyyy/MM/dd
     * 新機能
         * タスク [#12](https://office.yellow-man.yokohama/redmine/issues/12): 銘柄一覧インポートバッチの作成 - Sena - yellow-man.yokohama - Redmine 
         * タスク [#13](https://office.yellow-man.yokohama/redmine/issues/13): 企業スケジュールインポートバッチの作成 - Sena - yellow-man.yokohama - Redmine 
