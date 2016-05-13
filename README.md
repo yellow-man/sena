@@ -1,7 +1,8 @@
 # Sena-batchとは（Overview）
 
-日本国内株式の情報を、ウェブスクレイピング技術を使用し収集するバッチアプリケーションです。  
-収集する情報は、下記をご確認ください。
+日本国内株式の情報を、ウェブスクレイピング技術を使用し収集する  
+Play Framework 2.3ベースのバッチアプリケーションです。  
+収集する情報につきましては、下記をご覧ください。
 
 1. 銘柄一覧情報
 2. 企業決算スケジュール情報
@@ -11,12 +12,6 @@
 4. 指標情報
 5. 財務業績情報
     * 収集した財務業績情報より四半期ごとの前年比を算出し登録します。
-
-
-
-## 説明（Description）
-
-※TODO
 
 
 
@@ -58,24 +53,21 @@
 
 ## ドキュメント（Document）
 
-* データベース関連ドキュメント
-    * ERD
-        * 
-* java関連ドキュメント
-    * javadoc
-        * http://sena.yellow-man.yokohama/javadoc/batch/
-
-
-
-## 寄付・貢献（Contribution）
-
-※TODO
+* [Sena-batch アプリケーション API仕様](http://sena.yellow-man.yokohama/javadoc/batch/)
 
 
 
 ## 更新履歴（Version history）
 
-※TODO
+* [sena1.0.0-batch1.0](https://office.yellow-man.yokohama/redmine/versions/1) リリース yyyy/MM/dd
+    * 新機能
+        * タスク [#12](https://office.yellow-man.yokohama/redmine/issues/12): 銘柄一覧インポートバッチの作成 - Sena - yellow-man.yokohama - Redmine 
+        * タスク [#13](https://office.yellow-man.yokohama/redmine/issues/13): 企業スケジュールインポートバッチの作成 - Sena - yellow-man.yokohama - Redmine 
+        * タスク [#14](https://office.yellow-man.yokohama/redmine/issues/14): 企業スケジュールエクスポートバッチの作成 - Sena - yellow-man.yokohama - Redmine 
+        * タスク [#15](https://office.yellow-man.yokohama/redmine/issues/15): 企業財務インポートバッチの作成 - Sena - yellow-man.yokohama - Redmine 
+        * タスク [#16](https://office.yellow-man.yokohama/redmine/issues/16): 企業財務情報前年比更新バッチの作成 - Sena - yellow-man.yokohama - Redmine 
+        * タスク [#20](https://office.yellow-man.yokohama/redmine/issues/20): 信用残インポートバッチの作成 - Sena - yellow-man.yokohama - Redmine 
+        * タスク [#21](https://office.yellow-man.yokohama/redmine/issues/21): 企業指標インポートバッチの作成 - Sena - yellow-man.yokohama - Redmine 
 
 
 
