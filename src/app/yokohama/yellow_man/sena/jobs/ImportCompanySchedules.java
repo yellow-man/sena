@@ -162,6 +162,7 @@ public class ImportCompanySchedules extends AppLoggerMailJob {
 			companySchedules.stockCode         = stockCode;
 			companySchedules.settlement        = companySchedulesEntity.settlement;
 			companySchedules.settlementTypesId = AppConsts.SETTLEMENT_TYPES_ID_MAP.get(companySchedulesEntity.settlementType);
+			companySchedules.regCalendarFlg    = false;
 			companySchedules.created           = new Date();
 			companySchedules.modified          = new Date();
 			companySchedules.deleteFlg         = false;
