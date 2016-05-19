@@ -4,13 +4,13 @@
 Play Framework 2.3ベースのバッチアプリケーションです。  
 収集する情報につきましては、下記をご確認ください。
 
-1. 銘柄一覧情報
-2. 企業決算スケジュール情報
+* 銘柄一覧情報
+* 企業決算スケジュール情報
     * 収集した情報を特定のGoogle カレンダーへイベント登録します。
         * [決算スケジュール | Google カレンダー 実運用のサンプル](https://calendar.google.com/calendar/embed?src=24qrq6gcmnq39tep0bvjfjf9o8%40group.calendar.google.com&ctz=Asia/Tokyo "決算スケジュール | Google カレンダー 実運用のサンプル")
-3. 信用残高情報
-4. 指標情報
-5. 財務業績情報
+* 信用残高情報
+* 指標情報
+* 財務業績情報
     * 収集した財務業績情報より四半期ごとの前年比を算出し登録します。
 
 
@@ -23,33 +23,70 @@ Play Framework 2.3ベースのバッチアプリケーションです。
 
 ## インストール（Install）
 
-Sena-batchの動作環境、セットアップ方法についてご確認ください。
+Sena-batchの動作環境、セットアップ方法についてです。
 
-* 動作環境
-    * OS
+* 動作環境  
+基本的にJava 8が動作する環境であれば起動します。  
+（※以降、テスト運用を行ってるCentOS 7.2に合わせて説明を進めていきます。）
+    * 実行環境
         * Java 8が動作する環境
     * データベース
-        * MySQL5.5
+        * MariaDB 5.5（MySQL互換）
+
+* バイナリセットアップ  
+ダウンロードしたzipファイルを解凍するだけです。
+    * sena-1.0.0-batch1.0.zipを展開  
+    ```
+    # unzip ./sena-1.0.0-batch1.0.zip
+    ```
 
 * DBセットアップ
-
-
-* バイナリセットアップ
-
+    * DBユーザ作成
+        * ユーザ作成用DDLを用意しています。DBユーザ名、パスワードを置き換えて実行してください。  
+        [00_init_ddl.sql](https://github.com/yellow-man/sena-batch/blob/develop/sql/ddl/00_init_ddl.sql)
+    * 各テーブル作成
+        * テーブル作成用DDLを用意しています。  
+        [01_create_table_ddl.sql](https://github.com/yellow-man/sena-batch/blob/develop/sql/ddl/01_create_table_ddl.sql)
 
 * 設定ファイルの調整
-
+    * 展開したzipフォルダに設定ファイルも展開されます。  
+    環境に合わせてDB接続先、ログ出力先、実行結果をメール送信するためのSMTPサーバ、メール配信先の設定を調整してください。  
+    ```
+    ./sena-1.0.0-batch1.0/conf/application.conf
+    ```
 
 * テストバッチの起動方法
+    * 設定内容確認用に、テストバッチを用意しています。  
+    ログ出力、実行結果を設定ファイルで指定したメールアドレスに配信するだけのバッチです。  
+    ```
+    # cd ./sena-1.0.0-batch1.0
+    # java -cp './lib/*' -Dconfig.file=./conf/application-production.conf -Dlogger.file=./conf/logger.xml -Dfile.encoding=utf-8 yokohama.yellow_man.sena.jobs.JobExecutor yokohama.yellow_man.sena.jobs.TestJob
+    ```
 
 
 
+## 使い方・実行可能なバッチ一覧（Usage）
+実行可能なバッチのクラス名と、バッチの名前を記載しています。
 
-## 使い方（Usage）
+* 銘柄一覧情報  
+（銘柄一覧インポートバッチ - [yokohama.yellow_man.sena.jobs.ImportStocks](http://sena.yellow-man.yokohama/javadoc/batch/yokohama/yellow_man/sena/jobs/ImportStocks.html)）
 
-1. 各バッチの紹介
+* 企業決算スケジュール情報  
+（企業スケジュールインポートバッチ - [yokohama.yellow_man.sena.jobs.ImportCompanySchedules](http://sena.yellow-man.yokohama/javadoc/batch/yokohama/yellow_man/sena/jobs/ImportCompanySchedules.html)）
+    * 収集した情報を特定のGoogle カレンダーへイベント登録します。  
+    （企業スケジュールエクスポートバッチ - [yokohama.yellow_man.sena.jobs.ExportCompanySchedules](http://sena.yellow-man.yokohama/javadoc/batch/yokohama/yellow_man/sena/jobs/ExportCompanySchedules.html)）
+        * [決算スケジュール | Google カレンダー 実運用のサンプル](https://calendar.google.com/calendar/embed?src=24qrq6gcmnq39tep0bvjfjf9o8%40group.calendar.google.com&ctz=Asia/Tokyo "決算スケジュール | Google カレンダー 実運用のサンプル")
 
-※TODO
+* 信用残高情報  
+（信用残インポートバッチ - [yokohama.yellow_man.sena.jobs.ImportDebitBalances](http://sena.yellow-man.yokohama/javadoc/batch/yokohama/yellow_man/sena/jobs/ImportDebitBalances.html)）
+
+* 指標情報  
+（企業指標インポートバッチ - [yokohama.yellow_man.sena.jobs.ImportIndicators](http://sena.yellow-man.yokohama/javadoc/batch/yokohama/yellow_man/sena/jobs/ImportIndicators.html)）
+
+* 財務業績情報  
+（企業財務インポートバッチ - [yokohama.yellow_man.sena.jobs.ImportFinances](http://sena.yellow-man.yokohama/javadoc/batch/yokohama/yellow_man/sena/jobs/ImportFinances.html)）
+    * 収集した財務業績情報より四半期ごとの前年比を算出し登録します。  
+    （企業財務情報前年比更新バッチ - [yokohama.yellow_man.sena.jobs.ImportFinances](http://sena.yellow-man.yokohama/javadoc/batch/yokohama/yellow_man/sena/jobs/UpdateFinancesSetRate.html)）
 
 
 
