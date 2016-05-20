@@ -17,7 +17,7 @@ Play Framework 2.3ベースのバッチアプリケーションです。
 
 ## ダウンロード（Download）
 
-バイナリをダウンロードする場合は[こちら](https://office.yellow-man.yokohama/redmine/projects/sena/wiki/Sena-1_0_0-batch1_0)です。
+バイナリをダウンロードする場合は [こちら](https://github.com/yellow-man/sena-batch/releases) です。
 
 
 
