@@ -60,7 +60,7 @@ Sena-batchの動作環境、セットアップ方法についてです。
     ログ出力、実行結果を設定ファイルで指定したメールアドレスに配信するだけのバッチです。  
     ```
     # cd ./sena-1.0.0-batch1.0
-    # java -cp './lib/*' -Dconfig.file=./conf/application-production.conf -Dlogger.file=./conf/logger.xml -Dfile.encoding=utf-8 yokohama.yellow_man.sena.jobs.JobExecutor yokohama.yellow_man.sena.jobs.TestJob
+    # java -cp './lib/*' -Dconfig.file=./conf/application.conf -Dlogger.file=./conf/logger.xml -Dfile.encoding=utf-8 yokohama.yellow_man.sena.jobs.JobExecutor yokohama.yellow_man.sena.jobs.TestJob
     ```
 
 
