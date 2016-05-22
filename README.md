@@ -17,7 +17,7 @@ Play Framework 2.3ベースのバッチアプリケーションです。
 
 ## ダウンロード（Download）
 
-バイナリをダウンロードする場合は[こちら](https://office.yellow-man.yokohama/redmine/projects/sena/wiki/Sena-1_0_0-batch1_0)です。
+バイナリをダウンロードする場合は [こちら](https://github.com/yellow-man/sena-batch/releases) です。
 
 
 
@@ -43,10 +43,10 @@ Sena-batchの動作環境、セットアップ方法についてです。
 * DBセットアップ
     * DBユーザ作成
         * ユーザ作成用DDLを用意しています。DBユーザ名、パスワードを置き換えて実行してください。  
-        [00_init_ddl.sql](https://github.com/yellow-man/sena-batch/blob/develop/sql/ddl/00_init_ddl.sql)
+        [00_init_ddl.sql](https://github.com/yellow-man/sena-batch/blob/master/sql/ddl/00_init_ddl.sql)
     * 各テーブル作成
         * テーブル作成用DDLを用意しています。  
-        [01_create_table_ddl.sql](https://github.com/yellow-man/sena-batch/blob/develop/sql/ddl/01_create_table_ddl.sql)
+        [01_create_table_ddl.sql](https://github.com/yellow-man/sena-batch/blob/master/sql/ddl/01_create_table_ddl.sql)
 
 * 設定ファイルの調整
     * 展開したzipフォルダに設定ファイルも展開されます。  
@@ -98,7 +98,7 @@ Sena-batchの動作環境、セットアップ方法についてです。
 
 ## 更新履歴（Version history）
 
-* [sena-1.0.0-batch1.0](https://office.yellow-man.yokohama/redmine/versions/1) リリース yyyy/MM/dd
+* [sena-1.0.0-batch1.0](https://office.yellow-man.yokohama/redmine/versions/1) リリース 2016/05/20
     * 新機能
         * タスク [#12](https://office.yellow-man.yokohama/redmine/issues/12): 銘柄一覧インポートバッチの作成 - Sena - yellow-man.yokohama - Redmine
         * タスク [#13](https://office.yellow-man.yokohama/redmine/issues/13): 企業スケジュールインポートバッチの作成 - Sena - yellow-man.yokohama - Redmine
