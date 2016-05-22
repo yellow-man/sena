@@ -3,7 +3,7 @@ package yokohama.yellow_man.sena.components.db;
 import java.util.ArrayList;
 import java.util.List;
 
-import yokohama.yellow_man.common_tools.ListUtils;
+import yokohama.yellow_man.common_tools.CheckUtils;
 import yokohama.yellow_man.sena.core.models.DebitBalances;
 
 /**
@@ -29,7 +29,7 @@ public class DebitBalancesComponent extends yokohama.yellow_man.sena.core.compon
 		List<DebitBalances> debitBalancesList = getDebitBalancesListByStockCode(stockCode, 50, 1);
 
 		List<Long> retList = null;
-		if (!ListUtils.isEmpty(debitBalancesList)) {
+		if (!CheckUtils.isEmpty(debitBalancesList)) {
 			retList = new ArrayList<>();
 			for (DebitBalances debitBalances : debitBalancesList) {
 				retList.add(Long.valueOf(debitBalances.releaseDate.getTime()));

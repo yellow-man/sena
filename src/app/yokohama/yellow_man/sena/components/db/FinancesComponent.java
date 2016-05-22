@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.avaje.ebean.Ebean;
 
-import yokohama.yellow_man.common_tools.ListUtils;
+import yokohama.yellow_man.common_tools.CheckUtils;
 import yokohama.yellow_man.sena.core.models.Finances;
 
 /**
@@ -31,7 +31,7 @@ public class FinancesComponent extends yokohama.yellow_man.sena.core.components.
 		List<Finances> financesList = getFinancesListByStockCode(stockCode, 50, 1);
 
 		List<String> retList = null;
-		if (!ListUtils.isEmpty(financesList)) {
+		if (!CheckUtils.isEmpty(financesList)) {
 			retList = new ArrayList<>();
 			for (Finances debitBalances : financesList) {
 				retList.add(new StringBuffer(debitBalances.year).append("_").append(debitBalances.settlementTypesId).toString());

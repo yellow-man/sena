@@ -4,7 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import play.Play;
-import yokohama.yellow_man.common_tools.ListUtils;
+import yokohama.yellow_man.common_tools.CheckUtils;
 import yokohama.yellow_man.sena.components.db.CompanySchedulesComponent;
 import yokohama.yellow_man.sena.core.components.AppLogger;
 import yokohama.yellow_man.sena.core.components.google.CalendarComponent;
@@ -61,7 +61,7 @@ public class ExportCompanySchedules extends AppLoggerMailJob {
 
 		// 企業スケジュール情報取得
 		List<CompanySchedulesWithStocks> companySchedulesList = CompanySchedulesComponent.getCompanySchedulesUnregistList();
-		if (ListUtils.isEmpty(companySchedulesList)) {
+		if (CheckUtils.isEmpty(companySchedulesList)) {
 			AppLogger.warn("企業スケジュール情報が取得できませんでした。");
 
 		} else {

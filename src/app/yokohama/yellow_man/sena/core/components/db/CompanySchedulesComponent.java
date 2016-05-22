@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.avaje.ebean.Ebean;
 
-import yokohama.yellow_man.common_tools.ListUtils;
+import yokohama.yellow_man.common_tools.CheckUtils;
 import yokohama.yellow_man.sena.core.models.CompanySchedules;
 
 /**
@@ -34,7 +34,7 @@ public class CompanySchedulesComponent {
 					.findList();
 
 		CompanySchedules ret = null;
-		if (!ListUtils.isEmpty(list)) {
+		if (!CheckUtils.isEmpty(list)) {
 			ret = list.get(0);
 		}
 
