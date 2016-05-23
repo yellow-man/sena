@@ -1,8 +1,10 @@
-name := """sena"""
+name := """sena-batch"""
 
-version := "1.0.0-batch1.0"
+version := "1.0.0-2.0"
 
-lazy val root = (project in file(".")).enablePlugins(PlayJava)
+lazy val core = (project in file("modules/sena-core/src")).enablePlugins(PlayJava).settings(javacOptions in (Compile,doc) += "-Xdoclit:none")
+
+lazy val root = (project in file(".")).enablePlugins(PlayJava).dependsOn(core).aggregate(core)
 
 scalaVersion := "2.11.6"
 

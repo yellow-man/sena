@@ -1,0 +1,3 @@
+[submodule "src/modules/sena-core/src/sena-core"]
+path = src/modules/sena-core/src/sena-core
+url = https://github.com/yellow-man/sena-core.git
