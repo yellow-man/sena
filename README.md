@@ -92,7 +92,7 @@ Sena-batchの動作環境、セットアップ方法についてです。
 
 ## ドキュメント（Document）
 
-* [Sena-batch アプリケーション API仕様](http://sena.yellow-man.yokohama/javadoc/batch/)
+* [Sena-batch アプリケーション API仕様](http://yellow-man.github.io/sena-batch/javadoc/sena-1.0.0-batch1.0/)
 
 
 
