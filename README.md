@@ -86,7 +86,7 @@ Sena-batchの動作環境、セットアップ方法についてです。
 * 財務業績情報  
 （企業財務インポートバッチ - [yokohama.yellow_man.sena.jobs.ImportFinances](http://yellow-man.github.io/sena-batch/javadoc/sena-1.0.0-batch1.0/yokohama/yellow_man/sena/jobs/ImportFinances.html)）
     * 収集した財務業績情報より四半期ごとの前年比を算出し登録します。  
-    （企業財務情報前年比更新バッチ - [yokohama.yellow_man.sena.jobs.ImportFinances](http://yellow-man.github.io/sena-batch/javadoc/sena-1.0.0-batch1.0/yokohama/yellow_man/sena/jobs/UpdateFinancesSetRate.html)）
+    （企業財務情報前年比更新バッチ - [yokohama.yellow_man.sena.jobs.UpdateFinancesSetRate](http://yellow-man.github.io/sena-batch/javadoc/sena-1.0.0-batch1.0/yokohama/yellow_man/sena/jobs/UpdateFinancesSetRate.html)）
 
 
 
