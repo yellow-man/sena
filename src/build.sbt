@@ -1,6 +1,6 @@
 name := """sena-batch"""
 
-version := "1.0.0-2.0"
+version := "1.1.0-1.0"
 
 lazy val core = (project in file("modules/sena-core/src")).enablePlugins(PlayJava).settings(javacOptions in (Compile,doc) += "-Xdoclit:none")
 
