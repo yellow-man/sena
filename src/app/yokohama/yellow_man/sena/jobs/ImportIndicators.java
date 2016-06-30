@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Random;
 
 import play.Play;
-import yokohama.yellow_man.common_tools.ListUtils;
+import yokohama.yellow_man.common_tools.CheckUtils;
 import yokohama.yellow_man.sena.components.db.StocksComponent;
 import yokohama.yellow_man.sena.components.scraping.ScrapingComponent;
 import yokohama.yellow_man.sena.components.scraping.ScrapingException;
@@ -61,7 +61,7 @@ public class ImportIndicators extends AppLoggerMailJob {
 
 		// 銘柄情報取得
 		List<Stocks> stocksList = StocksComponent.getStocksList();
-		if (ListUtils.isEmpty(stocksList)) {
+		if (CheckUtils.isEmpty(stocksList)) {
 			AppLogger.warn("銘柄情報が取得できませんでした。");
 
 		} else {

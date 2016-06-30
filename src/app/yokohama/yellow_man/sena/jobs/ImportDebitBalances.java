@@ -7,7 +7,7 @@ import java.util.Random;
 import org.apache.commons.lang3.math.NumberUtils;
 
 import play.Play;
-import yokohama.yellow_man.common_tools.ListUtils;
+import yokohama.yellow_man.common_tools.CheckUtils;
 import yokohama.yellow_man.sena.components.db.DebitBalancesComponent;
 import yokohama.yellow_man.sena.components.db.StocksComponent;
 import yokohama.yellow_man.sena.components.scraping.ScrapingComponent;
@@ -64,7 +64,7 @@ public class ImportDebitBalances extends AppLoggerMailJob {
 
 		// 銘柄情報取得
 		List<Stocks> stocksList = StocksComponent.getStocksList();
-		if (ListUtils.isEmpty(stocksList)) {
+		if (CheckUtils.isEmpty(stocksList)) {
 			AppLogger.warn("銘柄情報が取得できませんでした。");
 
 		} else {
@@ -77,7 +77,7 @@ public class ImportDebitBalances extends AppLoggerMailJob {
 					// 外部サイトから信用残を取得
 					List<DebitBalancesEntity> debitBalancesEntityList = ScrapingComponent.getDebitBalancesList(stockCode);
 
-					if (ListUtils.isEmpty(debitBalancesEntityList)) {
+					if (CheckUtils.isEmpty(debitBalancesEntityList)) {
 						AppLogger.warn(new StringBuffer("信用残リストが取得できませんでした。：")
 								.append(stockCode).append(":").append(stockName)
 								.toString());

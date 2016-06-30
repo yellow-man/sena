@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Random;
 
 import play.Play;
-import yokohama.yellow_man.common_tools.ListUtils;
+import yokohama.yellow_man.common_tools.CheckUtils;
 import yokohama.yellow_man.sena.components.db.FinancesComponent;
 import yokohama.yellow_man.sena.components.db.StocksComponent;
 import yokohama.yellow_man.sena.components.scraping.ScrapingComponent;
@@ -62,7 +62,7 @@ public class ImportFinances extends AppLoggerMailJob {
 
 		// 銘柄情報取得
 		List<Stocks> stocksList = StocksComponent.getStocksList();
-		if (ListUtils.isEmpty(stocksList)) {
+		if (CheckUtils.isEmpty(stocksList)) {
 			AppLogger.warn("銘柄情報が取得できませんでした。");
 
 		} else {
@@ -75,7 +75,7 @@ public class ImportFinances extends AppLoggerMailJob {
 					// 外部サイトから企業財務を取得
 					List<FinancesEntity> financesEntityList = ScrapingComponent.getFinancesList(stockCode);
 
-					if (ListUtils.isEmpty(financesEntityList)) {
+					if (CheckUtils.isEmpty(financesEntityList)) {
 						AppLogger.warn(new StringBuffer("財務リストが取得できませんでした。：")
 								.append(stockCode).append(":").append(stockName)
 								.toString());
