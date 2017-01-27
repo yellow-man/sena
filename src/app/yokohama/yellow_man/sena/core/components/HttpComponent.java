@@ -37,7 +37,7 @@ public class HttpComponent {
 			try (CloseableHttpResponse response = httpClient.execute(getMethod)) {
 				if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
 					HttpEntity entity = response.getEntity();
-					ret = EntityUtils.toString(entity, StandardCharsets.UTF_8);
+					ret = EntityUtils.toString(entity, StandardCharsets.UTF_8.toString());
 				}
 			}
 		} catch (IOException e) {
@@ -67,12 +67,12 @@ public class HttpComponent {
 			builder.append("\r\n");
 
 			postMethod.setEntity(new StringEntity(builder.toString(),
-												  StandardCharsets.UTF_8));
+												  StandardCharsets.UTF_8.toString()));
 
 			try (CloseableHttpResponse response = httpClient.execute(postMethod)) {
 				if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
 					HttpEntity entity = response.getEntity();
-					ret = EntityUtils.toString(entity, StandardCharsets.UTF_8);
+					ret = EntityUtils.toString(entity, StandardCharsets.UTF_8.toString());
 				}
 			}
 		} catch (IOException e) {
