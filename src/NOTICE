@@ -18,20 +18,12 @@ The following software may be included in this application: MySQL Connector/J fr
 under the GNU General Public License, Version 2 (see: http://www.gnu.org/licenses/old-licenses/gpl-2.0.html)
 
 -----
-The following software may be included in this application: args4j from http://args4j.kohsuke.org/
-under the MIT license (see: http://www.opensource.org/licenses/mit-license.php)
-
------
 The following software may be included in this application: Apache HttpClient from https://hc.apache.org/httpcomponents-client-4.5.x/index.html
 under the Apache License 2.0 (see: http://www.apache.org/licenses/LICENSE-2.0)
 
 -----
 The following software may be included in this application: Opencsv from http://opencsv.sourceforge.net/
 under the Apache License 2.0 (see: http://www.apache.org/licenses/LICENSE-2.0)
-
------
-The following software may be included in this application: Jsoup from https://jsoup.org/
-under the MIT license (see: http://www.opensource.org/licenses/mit-license.php)
 
 -----
 The following software may be included in this application: Apache Commons Email from http://commons.apache.org/proper/commons-email/
@@ -44,3 +36,11 @@ under the Apache License 2.0 (see: http://www.apache.org/licenses/LICENSE-2.0)
 -----
 The following software may be included in this application: Calendar API V3 Rev180 1.22.0 from https://developers.google.com/google-apps/calendar/
 under the Apache License 2.0 (see: http://www.apache.org/licenses/LICENSE-2.0)
+
+-----
+The following software may be included in this application: args4j from http://args4j.kohsuke.org/
+under the MIT license (see: http://www.opensource.org/licenses/mit-license.php)
+
+-----
+The following software may be included in this application: Jsoup from https://jsoup.org/
+under the MIT license (see: http://www.opensource.org/licenses/mit-license.php)
