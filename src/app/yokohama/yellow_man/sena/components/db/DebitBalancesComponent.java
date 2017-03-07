@@ -11,7 +11,7 @@ import yokohama.yellow_man.sena.core.models.DebitBalances;
  * <p>共通コンポーネント{@link yokohama.yellow_man.sena.core.components.db.DebitBalancesComponent}を拡張する。
  *
  * @author yellow-man
- * @since 1.0
+ * @since 1.0.0-1.0
  * @see yokohama.yellow_man.sena.core.components.db.DebitBalancesComponent
  */
 public class DebitBalancesComponent extends yokohama.yellow_man.sena.core.components.db.DebitBalancesComponent {
@@ -22,7 +22,7 @@ public class DebitBalancesComponent extends yokohama.yellow_man.sena.core.compon
 	 *
 	 * @param stockCode 銘柄コード
 	 * @return 直近50件の公表日（ミリ秒）降順のリストを返す。
-	 * @since 1.0
+	 * @since 1.0.0-1.0
 	 */
 	public static List<Long> getReleaseDateTimeByStockCode(Integer stockCode) {
 

@@ -17,7 +17,7 @@ import yokohama.yellow_man.sena.core.components.AppLogger;
  * <p>バッチ処理固有ログ出力基底クラスの拡張。
  *
  * @author yellow-man
- * @since 1.0
+ * @since 1.0.0-1.0
  * @see AppJob
  */
 public abstract class AppLoggerMailJob extends AppLoggerJob {
@@ -49,7 +49,7 @@ public abstract class AppLoggerMailJob extends AppLoggerJob {
 	 * メール出力に関するログ等、以降のログはapplication.logとして出力される。
 	 *
 	 * @see yokohama.yellow_man.sena.jobs.AppJob#_finally()
-	 * @since 1.0
+	 * @since 1.0.0-1.0
 	 */
 	@Override
 	protected void _finally() {

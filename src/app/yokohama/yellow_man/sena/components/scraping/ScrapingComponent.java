@@ -36,7 +36,7 @@ import yokohama.yellow_man.sena.core.definitions.AppConsts;
  * ウェブスクレイピングを行うクラス。
  *
  * @author yellow-man
- * @since 1.0
+ * @since 1.0.0-1.0
  */
 public class ScrapingComponent {
 
@@ -61,7 +61,7 @@ public class ScrapingComponent {
 	 * @param stockCode 銘柄コード
 	 * @return 企業スケジュールエンティティを返却する。
 	 * @throws ScrapingException スクレイピング時に発生する例外。
-	 * @since 1.0
+	 * @since 1.0.0-1.0
 	 * @see CompanySchedulesEntity
 	 * @see ScrapingException
 	 */
@@ -142,7 +142,7 @@ public class ScrapingComponent {
 	 * @param stockCode 銘柄コード
 	 * @return 信用残エンティティを返却する。
 	 * @throws ScrapingException スクレイピング時に発生する例外。
-	 * @since 1.0
+	 * @since 1.0.0-1.0
 	 * @see DebitBalancesEntity
 	 * @see ScrapingException
 	 */
@@ -218,7 +218,7 @@ public class ScrapingComponent {
 	 * @param stockCode 銘柄コード
 	 * @return 企業指標エンティティを返却する。
 	 * @throws ScrapingException スクレイピング時に発生する例外。
-	 * @since 1.0
+	 * @since 1.0.0-1.0
 	 * @see IndicatorsEntity
 	 * @see ScrapingException
 	 */
@@ -426,7 +426,7 @@ public class ScrapingComponent {
 	 * @param stockCode 銘柄コード
 	 * @return 企業財務エンティティを返却する。
 	 * @throws ScrapingException スクレイピング時に発生する例外。
-	 * @since 1.0
+	 * @since 1.0.0-1.0
 	 * @see FinancesEntity
 	 * @see ScrapingException
 	 */

@@ -5,7 +5,7 @@ package yokohama.yellow_man.sena.components.scraping.entity;
  * <p>スクレイピング結果の企業スケジュール情報を保持する。
  *
  * @author yellow-man
- * @since 1.0
+ * @since 1.0.0-1.0
  */
 public class CompanySchedulesEntity extends EntityBase {
 

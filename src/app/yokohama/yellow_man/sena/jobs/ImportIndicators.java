@@ -21,7 +21,7 @@ import yokohama.yellow_man.sena.core.models.Stocks;
  * 相手方にアクセス負荷とならぬよう、1件取得ごとにランダムでインターバル(2秒～5秒)を設けている。
  *
  * @author yellow-man
- * @since 1.0
+ * @since 1.0.0-1.0
  */
 public class ImportIndicators extends AppLoggerMailJob {
 
@@ -33,7 +33,7 @@ public class ImportIndicators extends AppLoggerMailJob {
 
 	/**
 	 * 企業指標インポートバッチクラスコンストラクタ。
-	 * @since 1.0
+	 * @since 1.0.0-1.0
 	 */
 	public ImportIndicators() {
 		// メールタイトル
@@ -46,7 +46,7 @@ public class ImportIndicators extends AppLoggerMailJob {
 
 	/**
 	 * @see yokohama.yellow_man.sena.jobs.AppJob#run(java.util.List)
-	 * @since 1.0
+	 * @since 1.0.0-1.0
 	 */
 	@Override
 	protected void run(List<String> args) {
@@ -111,7 +111,7 @@ public class ImportIndicators extends AppLoggerMailJob {
 	 * @param date 取得日
 	 * @param indicatorsEntity 信用残エンティティのリスト
 	 * @return 1件インポートが成功したら{@code true}、全件失敗したら{@code false}
-	 * @since 1.0
+	 * @since 1.0.0-1.0
 	 */
 	private boolean _saveIndicators(Date date, IndicatorsEntity indicatorsEntity) {
 		boolean ret = false;

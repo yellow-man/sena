@@ -23,7 +23,7 @@ import yokohama.yellow_man.sena.core.models.ext.CompanySchedulesWithStocks;
  * レイトリミットに掛からないよう、1秒1件のペースで処理を行う。
  *
  * @author yellow-man
- * @since 1.0
+ * @since 1.0.0-1.0
  */
 public class ExportCompanySchedules extends AppLoggerMailJob {
 
@@ -35,7 +35,7 @@ public class ExportCompanySchedules extends AppLoggerMailJob {
 
 	/**
 	 * 企業スケジュールエクスポートバッチクラスコンストラクタ。
-	 * @since 1.0
+	 * @since 1.0.0-1.0
 	 */
 	public ExportCompanySchedules() {
 		// メールタイトル
@@ -48,7 +48,7 @@ public class ExportCompanySchedules extends AppLoggerMailJob {
 
 	/**
 	 * @see yokohama.yellow_man.sena.jobs.AppJob#run(java.util.List)
-	 * @since 1.0
+	 * @since 1.0.0-1.0
 	 */
 	@Override
 	protected void run(List<String> args) {

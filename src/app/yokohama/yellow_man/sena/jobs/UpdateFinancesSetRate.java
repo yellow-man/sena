@@ -23,7 +23,7 @@ import yokohama.yellow_man.sena.core.models.Stocks;
  * </ul>
  *
  * @author yellow-man
- * @since 1.0
+ * @since 1.0.0-1.0
  */
 public class UpdateFinancesSetRate extends AppLoggerMailJob {
 
@@ -35,7 +35,7 @@ public class UpdateFinancesSetRate extends AppLoggerMailJob {
 
 	/**
 	 * 企業財務情報前年比更新バッチクラスコンストラクタ。
-	 * @since 1.0
+	 * @since 1.0.0-1.0
 	 */
 	public UpdateFinancesSetRate() {
 		// メールタイトル
@@ -48,7 +48,7 @@ public class UpdateFinancesSetRate extends AppLoggerMailJob {
 
 	/**
 	 * @see yokohama.yellow_man.sena.jobs.AppJob#run(java.util.List)
-	 * @since 1.0
+	 * @since 1.0.0-1.0
 	 */
 	@Override
 	protected void run(List<String> args) {

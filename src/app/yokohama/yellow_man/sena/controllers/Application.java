@@ -9,7 +9,7 @@ import yokohama.yellow_man.sena.views.html.index;
  * <p>いったん放置。
  *
  * @author yellow-man
- * @since 1.0
+ * @since 1.0.0-1.0
  */
 public class Application extends Controller {
 
@@ -18,7 +18,7 @@ public class Application extends Controller {
 	 * いったん放置。
 	 *
 	 * @return Result
-	 * @since 1.0
+	 * @since 1.0.0-1.0
 	 */
 	public static Result index() {
 		return ok(index.render());

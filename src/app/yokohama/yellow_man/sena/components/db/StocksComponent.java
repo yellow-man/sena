@@ -5,7 +5,7 @@ package yokohama.yellow_man.sena.components.db;
  * <p>共通コンポーネント{@link yokohama.yellow_man.sena.core.components.db.StocksComponent}を拡張する。
  *
  * @author yellow-man
- * @since 1.0
+ * @since 1.0.0-1.0
  * @see yokohama.yellow_man.sena.core.components.db.StocksComponent
  */
 public class StocksComponent extends yokohama.yellow_man.sena.core.components.db.StocksComponent {

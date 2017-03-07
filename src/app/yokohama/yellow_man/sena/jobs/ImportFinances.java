@@ -22,7 +22,7 @@ import yokohama.yellow_man.sena.core.models.Stocks;
  * 相手方にアクセス負荷とならぬよう、1件取得ごとにランダムでインターバル(2秒～5秒)を設けている。
  *
  * @author yellow-man
- * @since 1.0
+ * @since 1.0.0-1.0
  */
 public class ImportFinances extends AppLoggerMailJob {
 
@@ -34,7 +34,7 @@ public class ImportFinances extends AppLoggerMailJob {
 
 	/**
 	 * 企業財務インポートバッチクラスコンストラクタ。
-	 * @since 1.0
+	 * @since 1.0.0-1.0
 	 */
 	public ImportFinances() {
 		// メールタイトル
@@ -47,7 +47,7 @@ public class ImportFinances extends AppLoggerMailJob {
 
 	/**
 	 * @see yokohama.yellow_man.sena.jobs.AppJob#run(java.util.List)
-	 * @since 1.0
+	 * @since 1.0.0-1.0
 	 */
 	@Override
 	protected void run(List<String> args) {
@@ -131,7 +131,7 @@ public class ImportFinances extends AppLoggerMailJob {
 	 * @param stockCode 銘柄コード
 	 * @param financesEntityList 財務エンティティのリスト
 	 * @return 1件インポートが成功したら（0..成功）、ただし例外が発生していたら（1..失敗）、1件も処理しなかったら（2..スキップ）
-	 * @since 1.0
+	 * @since 1.0.0-1.0
 	 */
 	private int _saveFinances(Integer stockCode, List<FinancesEntity> financesEntityList) {
 		int ret = 2;

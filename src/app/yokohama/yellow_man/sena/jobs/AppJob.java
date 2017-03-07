@@ -10,7 +10,7 @@ import yokohama.yellow_man.sena.core.components.AppLogger;
  * バッチの起動は、{@link JobExecutor#execute()}メソッドより呼び出される。
  *
  * @author yellow-man
- * @since 1.0
+ * @since 1.0.0-1.0
  */
 public abstract class AppJob {
 
@@ -19,7 +19,7 @@ public abstract class AppJob {
 	 * {@link JobExecutor#execute()}メソッドより呼び出される。
 	 *
 	 * @param args 起動引数
-	 * @since 1.0
+	 * @since 1.0.0-1.0
 	 */
 	public final void call(List<String> args) {
 		try {
@@ -41,7 +41,7 @@ public abstract class AppJob {
 	 * <p>初期化に失敗した場合、{@link #before()}、{@link #run(List)}、{@link #after()}メソッドの処理は行われない。
 	 *
 	 * @return true：初期化成功、false：失敗。
-	 * @since 1.0
+	 * @since 1.0.0-1.0
 	 */
 	protected boolean init() {
 		return true;
@@ -51,7 +51,7 @@ public abstract class AppJob {
 	 * バッチ処理の前処理。
 	 * 前処理が必要な場合、このメソッドを継承する。
 	 *
-	 * @since 1.0
+	 * @since 1.0.0-1.0
 	 */
 	protected void before() {}
 
@@ -61,7 +61,7 @@ public abstract class AppJob {
 	 *
 	 * @param args 起動引数
 	 * @throws Exception 例外
-	 * @since 1.0
+	 * @since 1.0.0-1.0
 	 */
 	protected abstract void run(List<String> args) throws Exception;
 
@@ -69,7 +69,7 @@ public abstract class AppJob {
 	 * バッチ処理の後処理。
 	 * 後処理が必要な場合、このメソッドを継承する。
 	 *
-	 * @since 1.0
+	 * @since 1.0.0-1.0
 	 */
 	protected void after() {}
 
@@ -77,7 +77,7 @@ public abstract class AppJob {
 	 * バッチ処理のメモリ解放等。
 	 * バッチ処理のメモリ解放等行う場合、このメソッドを継承する。
 	 *
-	 * @since 1.0
+	 * @since 1.0.0-1.0
 	 */
 	protected void _finally() {}
 }

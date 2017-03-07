@@ -7,7 +7,7 @@ import java.util.Date;
  * <p>スクレイピング結果の信用残情報を保持する。
  *
  * @author yellow-man
- * @since 1.0
+ * @since 1.0.0-1.0
  */
 public class DebitBalancesEntity extends EntityBase {
 

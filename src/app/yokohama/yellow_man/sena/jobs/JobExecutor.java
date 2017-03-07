@@ -31,7 +31,7 @@ import play.Play;
  * </ul>
  *
  * @author yellow-man
- * @since 1.0
+ * @since 1.0.0-1.0
  */
 public class JobExecutor {
 
@@ -46,7 +46,7 @@ public class JobExecutor {
 	/**
 	 * コマンドライン起動{@code main}関数。
 	 * @param args 起動引数
-	 * @since 1.0
+	 * @since 1.0.0-1.0
 	 */
 	public static void main(String[] args) {
 
@@ -66,7 +66,7 @@ public class JobExecutor {
 	/**
 	 * バッチ処理起動メソッド。
 	 * <p>Playアプリケーションの起動、バッチ実行クラスの呼び出しを行う。
-	 * @since 1.0
+	 * @since 1.0.0-1.0
 	 */
 	private void execute() {
 

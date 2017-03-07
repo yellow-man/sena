@@ -13,7 +13,7 @@ import yokohama.yellow_man.sena.core.models.Finances;
  * <p>共通コンポーネント{@link yokohama.yellow_man.sena.core.components.db.FinancesComponent}を拡張する。
  *
  * @author yellow-man
- * @since 1.0
+ * @since 1.0.0-1.0
  * @see yokohama.yellow_man.sena.core.components.db.FinancesComponent
  */
 public class FinancesComponent extends yokohama.yellow_man.sena.core.components.db.FinancesComponent {
@@ -24,7 +24,7 @@ public class FinancesComponent extends yokohama.yellow_man.sena.core.components.
 	 *
 	 * @param stockCode 銘柄コード
 	 * @return 決算年（{@code year}）降順、決算種別（{@code settlement_types_id}）降順のリストを返す。
-	 * @since 1.0
+	 * @since 1.0.0-1.0
 	 */
 	public static List<String> getYearSettlementTypesIdByStockCode(Integer stockCode) {
 
@@ -48,7 +48,7 @@ public class FinancesComponent extends yokohama.yellow_man.sena.core.components.
 	 * @param stockCode 銘柄コード
 	 * @param settlementTypesId 決算種別（1..第１、2..第２、3..第３、4..本）
 	 * @return 決算年（降順）のリストを返す。
-	 * @since 1.0
+	 * @since 1.0.0-1.0
 	 */
 	public static List<Finances> getFinancesByStockCodeSettlementTypesIdList(Integer stockCode, Integer settlementTypesId) {
 		List<Finances> retList =

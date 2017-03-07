@@ -11,7 +11,7 @@ import yokohama.yellow_man.sena.core.components.AppLogger;
  * <p>バッチ処理ごとの個別ログを出力する場合、このクラスを継承する。
  *
  * @author yellow-man
- * @since 1.0
+ * @since 1.0.0-1.0
  * @see AppJob
  */
 public abstract class AppLoggerJob extends AppJob {
@@ -29,7 +29,7 @@ public abstract class AppLoggerJob extends AppJob {
 	/**
 	 * ログ出力先の切り替え処理を追加。
 	 * @see yokohama.yellow_man.sena.jobs.AppJob#init()
-	 * @since 1.0
+	 * @since 1.0.0-1.0
 	 */
 	@Override
 	protected boolean init() {
@@ -41,7 +41,7 @@ public abstract class AppLoggerJob extends AppJob {
 	/**
 	 * ログ出力先の切り替え処理を追加。
 	 * @see yokohama.yellow_man.sena.jobs.AppJob#_finally()
-	 * @since 1.0
+	 * @since 1.0.0-1.0
 	 */
 	@Override
 	protected void _finally() {

@@ -10,13 +10,13 @@ import yokohama.yellow_man.sena.core.components.AppLogger;
  * <p>バッチ疎通確認等に使用する。
  *
  * @author yellow-man
- * @since 1.0
+ * @since 1.0.0-1.0
  */
 public class TestJob extends AppLoggerMailJob {
 
 	/**
 	 * バッチ処理テストクラスコンストラクタ。
-	 * @since 1.0
+	 * @since 1.0.0-1.0
 	 */
 	public TestJob() {
 		// メールタイトル
@@ -29,7 +29,7 @@ public class TestJob extends AppLoggerMailJob {
 
 	/**
 	 * @see yokohama.yellow_man.sena.jobs.AppJob#run(java.util.List)
-	 * @since 1.0
+	 * @since 1.0.0-1.0
 	 */
 	@Override
 	protected void run(List<String> args) {
