@@ -8,7 +8,6 @@ import java.io.PrintWriter;
 import java.io.StringReader;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
 
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.math.NumberUtils;
@@ -21,6 +20,7 @@ import yokohama.yellow_man.sena.components.db.StocksComponent;
 import yokohama.yellow_man.sena.core.components.AppLogger;
 import yokohama.yellow_man.sena.core.components.HttpComponent;
 import yokohama.yellow_man.sena.core.models.Stocks;
+import yokohama.yellow_man.sena.jobs.JobExecutor.JobArgument;
 
 /**
  * 銘柄一覧インポートバッチクラス。
@@ -28,6 +28,7 @@ import yokohama.yellow_man.sena.core.models.Stocks;
  *
  * @author yellow-man
  * @since 1.0.0-1.0
+ * @version 1.1.0-1.2
  */
 public class ImportStocks extends AppLoggerMailJob {
 
@@ -69,10 +70,10 @@ public class ImportStocks extends AppLoggerMailJob {
 
 	/**
 	 * @see yokohama.yellow_man.sena.jobs.AppJob#run(java.util.List)
-	 * @since 1.0.0-1.0
+	 * @since 1.1.0-1.2
 	 */
 	@Override
-	protected void run(List<String> args) {
+	protected void run(JobArgument args) {
 		AppLogger.info("銘柄一覧インポートバッチ　開始");
 
 		// 現在日時

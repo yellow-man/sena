@@ -12,6 +12,7 @@ import yokohama.yellow_man.sena.core.components.AppLogger;
 import yokohama.yellow_man.sena.core.definitions.AppConsts;
 import yokohama.yellow_man.sena.core.models.Finances;
 import yokohama.yellow_man.sena.core.models.Stocks;
+import yokohama.yellow_man.sena.jobs.JobExecutor.JobArgument;
 
 /**
  * 企業財務情報前年比更新バッチクラス。
@@ -24,6 +25,7 @@ import yokohama.yellow_man.sena.core.models.Stocks;
  *
  * @author yellow-man
  * @since 1.0.0-1.0
+ * @version 1.1.0-1.2
  */
 public class UpdateFinancesSetRate extends AppLoggerMailJob {
 
@@ -48,10 +50,10 @@ public class UpdateFinancesSetRate extends AppLoggerMailJob {
 
 	/**
 	 * @see yokohama.yellow_man.sena.jobs.AppJob#run(java.util.List)
-	 * @since 1.0.0-1.0
+	 * @since 1.1.0-1.2
 	 */
 	@Override
-	protected void run(List<String> args) {
+	protected void run(JobArgument args) {
 		AppLogger.info("企業財務情報前年比更新バッチ　開始");
 
 		// 成功件数

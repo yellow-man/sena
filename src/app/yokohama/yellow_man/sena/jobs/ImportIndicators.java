@@ -13,6 +13,7 @@ import yokohama.yellow_man.sena.components.scraping.entity.IndicatorsEntity;
 import yokohama.yellow_man.sena.core.components.AppLogger;
 import yokohama.yellow_man.sena.core.models.Indicators;
 import yokohama.yellow_man.sena.core.models.Stocks;
+import yokohama.yellow_man.sena.jobs.JobExecutor.JobArgument;
 
 /**
  * 企業指標インポートバッチクラス。
@@ -22,6 +23,7 @@ import yokohama.yellow_man.sena.core.models.Stocks;
  *
  * @author yellow-man
  * @since 1.0.0-1.0
+ * @version 1.1.0-1.2
  */
 public class ImportIndicators extends AppLoggerMailJob {
 
@@ -46,10 +48,10 @@ public class ImportIndicators extends AppLoggerMailJob {
 
 	/**
 	 * @see yokohama.yellow_man.sena.jobs.AppJob#run(java.util.List)
-	 * @since 1.0.0-1.0
+	 * @since 1.1.0-1.2
 	 */
 	@Override
-	protected void run(List<String> args) {
+	protected void run(JobArgument args) {
 		AppLogger.info("企業指標インポートバッチ　開始");
 
 		// 現在日時

@@ -30,6 +30,7 @@ import yokohama.yellow_man.sena.components.scraping.entity.CompanySchedulesEntit
 import yokohama.yellow_man.sena.components.scraping.entity.DebitBalancesEntity;
 import yokohama.yellow_man.sena.components.scraping.entity.FinancesEntity;
 import yokohama.yellow_man.sena.components.scraping.entity.IndicatorsEntity;
+import yokohama.yellow_man.sena.components.scraping.entity.StockPricesEntity;
 import yokohama.yellow_man.sena.core.definitions.AppConsts;
 
 /**
@@ -37,6 +38,7 @@ import yokohama.yellow_man.sena.core.definitions.AppConsts;
  *
  * @author yellow-man
  * @since 1.0.0-1.0
+ * @version 1.1.0-1.2
  */
 public class ScrapingComponent {
 
@@ -518,6 +520,19 @@ public class ScrapingComponent {
 		}
 
 		return retList;
+	}
+
+	/**
+	 * 株価を取得する。
+	 * @param stockCode 銘柄コード
+	 * @return 株価エンティティを返却する。
+	 * @throws ScrapingException スクレイピング時に発生する例外。
+	 * @since 1.1.0-1.2
+	 * @see StockPricesEntity
+	 * @see ScrapingException
+	 */
+	public static List<StockPricesEntity> getStockPricesList(Integer stockCode) throws ScrapingException {
+		return null;
 	}
 
 }

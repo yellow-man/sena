@@ -1,16 +1,19 @@
 package yokohama.yellow_man.sena.jobs;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.Date;
 
 import org.kohsuke.args4j.Argument;
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
+import org.kohsuke.args4j.Option;
+import org.kohsuke.args4j.OptionDef;
+import org.kohsuke.args4j.spi.OneArgumentOptionHandler;
+import org.kohsuke.args4j.spi.Setter;
 import org.kohsuke.args4j.spi.StringArrayOptionHandler;
 
 import play.Play;
+import yokohama.yellow_man.common_tools.DateUtils;
 
 /**
  * バッチ処理の起動クラス。
@@ -32,16 +35,62 @@ import play.Play;
  *
  * @author yellow-man
  * @since 1.0.0-1.0
+ * @version 1.1.0-1.2
  */
 public class JobExecutor {
 
-	/** 起動引数：実行するバッチクラス名 */
-	@Argument(index=0, metaVar="jobClass", required=true)
-	private String jobClass;
+	/**
+	 * 起動引数を保持するクラス。
+	 * @author yellow-man
+	 * @since 1.1.0-1.2
+	 */
+	public static class JobArgument {
+		/** 起動引数：実行するバッチクラス名 */
+		@Argument(index=0, metaVar="jobClass", required=true)
+		public String jobClass;
 
-	/** 起動引数：実行するバッチクラスに渡すパラメータ */
-	@Argument(index=1, metaVar="arguments...", handler=StringArrayOptionHandler.class)
-	private String[] arguments;
+		/** 起動引数：実行するバッチクラスに渡すパラメータ */
+		@Argument(index=1, metaVar="arguments...", handler=StringArrayOptionHandler.class)
+		public String[] arguments;
+
+		/** 起動引数：取得対象開始日（フォーマット：YYYY-MM-DD） */
+		@Option(name="-sd", handler=DateOptionHandler.class, metaVar="startDate", usage="start date")
+		public Date startDate;
+
+		/** 起動引数：取得対象終了日（フォーマット：YYYY-MM-DD） */
+		@Option(name="-ed", handler=DateOptionHandler.class, metaVar="endDate", usage="end date")
+		public Date endDate;
+
+		/**
+		 * args4j ハンドラ拡張 日付チェックハンドラクラス。
+		 * @author yellow-man
+		 * @since 1.1.0-1.2
+		 */
+		public static class DateOptionHandler extends OneArgumentOptionHandler<Date> {
+			/**
+			 * コンストラクタ。
+			 * @param parser The owner to which this handler belongs to.
+			 * @param option The annotation.
+			 * @param setter Object to be used for setting value.
+			 */
+			public DateOptionHandler(CmdLineParser parser, OptionDef option, Setter<? super Date> setter) {
+				super(parser, option, setter);
+			}
+
+			/* (非 Javadoc)
+			 * @see org.kohsuke.args4j.spi.OneArgumentOptionHandler#parse(java.lang.String)
+			 */
+			@Override
+			protected Date parse(String argument) throws NumberFormatException, CmdLineException {
+
+				Date date = DateUtils.toDate(argument, DateUtils.DATE_FORMAT_YYYY_MM_DD_2);
+				if (date == null) {
+					throw new IllegalArgumentException(argument);
+				}
+				return date;
+			}
+		}
+	}
 
 	/**
 	 * コマンドライン起動{@code main}関数。
@@ -50,25 +99,26 @@ public class JobExecutor {
 	 */
 	public static void main(String[] args) {
 
-		JobExecutor jobExecutor = new JobExecutor();
-
-		CmdLineParser parser = new CmdLineParser(jobExecutor);
+		// 起動引数保持用オブジェクト初期化
+		JobArgument jobArgument = new JobArgument();
+		CmdLineParser parser = new CmdLineParser(jobArgument);
 		try {
 			parser.parseArgument(args);
 		} catch (CmdLineException e) {
 			e.printStackTrace();
 			return;
 		}
-
-		jobExecutor.execute();
+		JobExecutor jobExecutor = new JobExecutor();
+		jobExecutor.execute(jobArgument);
 	}
 
 	/**
 	 * バッチ処理起動メソッド。
 	 * <p>Playアプリケーションの起動、バッチ実行クラスの呼び出しを行う。
-	 * @since 1.0.0-1.0
+	 * @param jobArgument 起動引数
+	 * @since 1.1.0-1.2
 	 */
-	private void execute() {
+	private void execute(JobArgument jobArgument) {
 
 		try {
 			// playアプリケーション取得
@@ -82,18 +132,13 @@ public class JobExecutor {
 
 			// jobクラス取得
 			@SuppressWarnings("unchecked")
-			Class<? extends AppJob> clazz = (Class<? extends AppJob>) Play.application().classloader().loadClass(this.jobClass);
+			Class<? extends AppJob> clazz = (Class<? extends AppJob>) Play.application().classloader().loadClass(jobArgument.jobClass);
 
 			// Jobインスタンス生成
 			AppJob job = clazz.newInstance();
 
 			// job呼び出し
-			List<String> argList = null;
-			if (this.arguments != null) {
-				argList = new ArrayList<String>();
-				argList.addAll(Arrays.asList(this.arguments));
-			}
-			job.call(argList);
+			job.call(jobArgument);
 
 		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
 			e.printStackTrace();

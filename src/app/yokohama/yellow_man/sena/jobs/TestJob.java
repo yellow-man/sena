@@ -1,9 +1,10 @@
 package yokohama.yellow_man.sena.jobs;
 
 import java.util.Date;
-import java.util.List;
 
+import yokohama.yellow_man.common_tools.FieldUtils;
 import yokohama.yellow_man.sena.core.components.AppLogger;
+import yokohama.yellow_man.sena.jobs.JobExecutor.JobArgument;
 
 /**
  * バッチ処理テストクラス。
@@ -11,6 +12,7 @@ import yokohama.yellow_man.sena.core.components.AppLogger;
  *
  * @author yellow-man
  * @since 1.0.0-1.0
+ * @version 1.1.0-1.2
  */
 public class TestJob extends AppLoggerMailJob {
 
@@ -29,10 +31,10 @@ public class TestJob extends AppLoggerMailJob {
 
 	/**
 	 * @see yokohama.yellow_man.sena.jobs.AppJob#run(java.util.List)
-	 * @since 1.0.0-1.0
+	 * @since 1.1.0-1.2
 	 */
 	@Override
-	protected void run(List<String> args) {
+	protected void run(JobArgument args) {
 
 		// ログ出力テスト
 		AppLogger.debug("debugテスト");
@@ -40,5 +42,7 @@ public class TestJob extends AppLoggerMailJob {
 		AppLogger.warn("warnテスト");
 		AppLogger.error("errorテスト");
 		AppLogger.error("errorテスト", new Exception());
+
+		AppLogger.info("infoテスト:" + FieldUtils.toStringField(args));
 	}
 }

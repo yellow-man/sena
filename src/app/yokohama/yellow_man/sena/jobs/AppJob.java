@@ -3,6 +3,7 @@ package yokohama.yellow_man.sena.jobs;
 import java.util.List;
 
 import yokohama.yellow_man.sena.core.components.AppLogger;
+import yokohama.yellow_man.sena.jobs.JobExecutor.JobArgument;
 
 /**
  * バッチ処理の基底クラス。
@@ -11,6 +12,7 @@ import yokohama.yellow_man.sena.core.components.AppLogger;
  *
  * @author yellow-man
  * @since 1.0.0-1.0
+ * @version 1.1.0-1.2
  */
 public abstract class AppJob {
 
@@ -19,9 +21,9 @@ public abstract class AppJob {
 	 * {@link JobExecutor#execute()}メソッドより呼び出される。
 	 *
 	 * @param args 起動引数
-	 * @since 1.0.0-1.0
+	 * @since 1.1.0-1.2
 	 */
-	public final void call(List<String> args) {
+	public final void call(JobArgument args) {
 		try {
 			if(init()) {
 				before();
@@ -61,9 +63,9 @@ public abstract class AppJob {
 	 *
 	 * @param args 起動引数
 	 * @throws Exception 例外
-	 * @since 1.0.0-1.0
+	 * @since 1.1.0-1.2
 	 */
-	protected abstract void run(List<String> args) throws Exception;
+	protected abstract void run(JobArgument args) throws Exception;
 
 	/**
 	 * バッチ処理の後処理。

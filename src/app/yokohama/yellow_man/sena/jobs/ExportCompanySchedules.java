@@ -11,6 +11,7 @@ import yokohama.yellow_man.sena.core.components.google.CalendarComponent;
 import yokohama.yellow_man.sena.core.components.google.GoogleApiException;
 import yokohama.yellow_man.sena.core.models.CompanySchedules;
 import yokohama.yellow_man.sena.core.models.ext.CompanySchedulesWithStocks;
+import yokohama.yellow_man.sena.jobs.JobExecutor.JobArgument;
 
 /**
  * 企業スケジュールエクスポートバッチクラス。
@@ -24,6 +25,7 @@ import yokohama.yellow_man.sena.core.models.ext.CompanySchedulesWithStocks;
  *
  * @author yellow-man
  * @since 1.0.0-1.0
+ * @version 1.1.0-1.2
  */
 public class ExportCompanySchedules extends AppLoggerMailJob {
 
@@ -48,10 +50,10 @@ public class ExportCompanySchedules extends AppLoggerMailJob {
 
 	/**
 	 * @see yokohama.yellow_man.sena.jobs.AppJob#run(java.util.List)
-	 * @since 1.0.0-1.0
+	 * @since 1.1.0-1.2
 	 */
 	@Override
-	protected void run(List<String> args) {
+	protected void run(JobArgument args) {
 		AppLogger.info("企業スケジュールエクスポートバッチ　開始");
 
 		// 成功件数
