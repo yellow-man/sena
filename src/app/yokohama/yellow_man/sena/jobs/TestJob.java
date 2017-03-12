@@ -1,8 +1,12 @@
 package yokohama.yellow_man.sena.jobs;
 
 import java.util.Date;
+import java.util.List;
 
 import yokohama.yellow_man.common_tools.FieldUtils;
+import yokohama.yellow_man.sena.components.scraping.ScrapingComponent;
+import yokohama.yellow_man.sena.components.scraping.ScrapingException;
+import yokohama.yellow_man.sena.components.scraping.entity.StockPricesEntity;
 import yokohama.yellow_man.sena.core.components.AppLogger;
 import yokohama.yellow_man.sena.jobs.JobExecutor.JobArgument;
 
@@ -44,5 +48,12 @@ public class TestJob extends AppLoggerMailJob {
 		AppLogger.error("errorテスト", new Exception());
 
 		AppLogger.info("infoテスト:" + FieldUtils.toStringField(args));
+
+		try {
+			List<StockPricesEntity> stockPricesEntityList = ScrapingComponent.getStockPricesList(7575, args.startDate, args.endDate);
+		} catch (ScrapingException e) {
+			// TODO 自動生成された catch ブロック
+			e.printStackTrace();
+		}
 	}
 }

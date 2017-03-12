@@ -6,6 +6,7 @@ import java.math.BigDecimal;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -57,6 +58,9 @@ public class ScrapingComponent {
 
 	/** 企業財務取得：アクセス先のURL */
 	private static final String GET_FINANCES_ACCESS_URL = "http://ke.kabupro.jp/xbrl/";
+
+	/** 株価取得：アクセス先のURL */
+	private static final String GET_STOCK_PRICES_ACCESS_URL = "http://info.finance.yahoo.co.jp/history/?code=";
 
 	/**
 	 * 企業スケジュールを取得する。
@@ -525,14 +529,90 @@ public class ScrapingComponent {
 	/**
 	 * 株価を取得する。
 	 * @param stockCode 銘柄コード
+	 * @param startDate 取得開始日
+	 * @param endDate 取得終了日
 	 * @return 株価エンティティを返却する。
 	 * @throws ScrapingException スクレイピング時に発生する例外。
 	 * @since 1.1.0-1.2
 	 * @see StockPricesEntity
 	 * @see ScrapingException
 	 */
-	public static List<StockPricesEntity> getStockPricesList(Integer stockCode) throws ScrapingException {
-		return null;
+	public static List<StockPricesEntity> getStockPricesList(Integer stockCode, Date startDate, Date endDate) throws ScrapingException {
+		String messagePrefix = "stockCode=" + stockCode;
+
+		URI getUrl = null;
+		List<StockPricesEntity> retList = null;
+
+		try {
+			getUrl = new URI(GET_STOCK_PRICES_ACCESS_URL + stockCode);
+		} catch (URISyntaxException e) {
+			throw new ScrapingException("URL作成に失敗しました。：" + messagePrefix, e);
+		}
+
+		HttpGet httpGet = new HttpGet(getUrl);
+
+		try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
+
+			String html = null;
+			try (CloseableHttpResponse response = httpClient.execute(httpGet)) {
+
+				int statusCode = response.getStatusLine().getStatusCode();
+				System.out.println("ステータスコード:" + statusCode);
+
+				switch (response.getStatusLine().getStatusCode()) {
+					case HttpStatus.SC_OK:
+						System.out.println("取得に成功しました。：" + messagePrefix + ", statusCode=" + statusCode);
+						html = EntityUtils.toString(response.getEntity(), "Shift-jis");
+						break;
+
+					case HttpStatus.SC_NOT_FOUND:
+						throw new ScrapingException("データが存在しません。：" + messagePrefix + ", statusCode=" + statusCode);
+
+					default:
+						throw new ScrapingException("通信エラーが発生しました。：" + messagePrefix + ", statusCode=" + statusCode);
+				}
+			}
+
+			if(html == null || html.length() < 0){
+				throw new ScrapingException("データ取得に失敗しました。：" + messagePrefix);
+			}
+
+			Document document = Jsoup.parse(html);
+			// tableを読み込む
+			Elements tableTrList = document.getElementsByClass("boardFin").select("tr");
+
+			if (tableTrList != null && tableTrList.size() > 4) {
+				int tableTrSize = tableTrList.size();
+				retList = new ArrayList<StockPricesEntity>();
+				for (int i = 4; i < tableTrSize; i++) {
+					Element trElement = tableTrList.get(i);
+					Elements tdElements = trElement.select("td");
+					if (tdElements != null && tdElements.size() == 7) {
+						StockPricesEntity stockPrices = new StockPricesEntity();
+
+						try{
+							stockPrices.dateStr = tdElements.get(0).text();
+							stockPrices.date = null;
+							stockPrices.stockCode = stockCode;
+							stockPrices.openingPrice = tdElements.get(1).text();
+							stockPrices.highPrice = tdElements.get(2).text();
+							stockPrices.lowPrice = tdElements.get(3).text();
+							stockPrices.closingPrice = tdElements.get(4).text();
+							stockPrices.turnover = tdElements.get(5).text();
+							stockPrices.adjustedClosingPrice = tdElements.get(6).text();
+						}catch(Exception e){
+							continue;
+						}
+						System.out.println(stockPrices.toString());
+						retList.add(stockPrices);
+					}
+				}
+			}
+
+		} catch (IOException e) {
+			throw new ScrapingException("HTTP GET リクエスト時にエラーが発生しました。：getUrl=" + getUrl, e);
+		}
+		return retList;
 	}
 
 }

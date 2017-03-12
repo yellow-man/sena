@@ -70,9 +70,8 @@ public class ImportStockPrices extends AppLoggerMailJob {
 				String stockName = stocks.stockName;
 
 				try {
-
 					// 外部サイトから株価情報を取得
-					List<StockPricesEntity> stockPricesEntityList = ScrapingComponent.getStockPricesList(stockCode);
+					List<StockPricesEntity> stockPricesEntityList = ScrapingComponent.getStockPricesList(stockCode, args.startDate, args.endDate);
 
 					if (CheckUtils.isEmpty(stockPricesEntityList)) {
 						AppLogger.warn(new StringBuffer("株価リストが取得できませんでした。：")
@@ -120,8 +119,7 @@ public class ImportStockPrices extends AppLoggerMailJob {
 				}
 			}
 		}
-
-		AppLogger.info("株価情報インポートバッチ　終了：処理件数=" + String.valueOf(success + error) + ", 成功件数=" + success + ", 失敗件数=" + error);
+		AppLogger.info("株価情報インポートバッチ　終了：処理件数=" + String.valueOf(success + error + skip) + ", 成功件数=" + success + ", 失敗件数=" + error + ", スキップ件数=" + skip);
 	}
 
 	/**

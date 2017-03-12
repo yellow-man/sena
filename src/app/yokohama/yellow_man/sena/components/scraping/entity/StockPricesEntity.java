@@ -9,7 +9,10 @@ package yokohama.yellow_man.sena.components.scraping.entity;
  */
 public class StockPricesEntity extends EntityBase {
 
-	/** 日付 */
+	/** 日付（文字列） */
+	public String dateStr;
+
+	/** 日付（日付） */
 	public String date;
 
 	/** 銘柄コード */
