@@ -3,6 +3,7 @@ package yokohama.yellow_man.sena.jobs;
 import java.util.Date;
 import java.util.List;
 
+import yokohama.yellow_man.common_tools.CheckUtils;
 import yokohama.yellow_man.common_tools.FieldUtils;
 import yokohama.yellow_man.sena.components.scraping.ScrapingComponent;
 import yokohama.yellow_man.sena.components.scraping.ScrapingException;
@@ -50,7 +51,13 @@ public class TestJob extends AppLoggerMailJob {
 		AppLogger.info("infoテスト:" + FieldUtils.toStringField(args));
 
 		try {
-			List<StockPricesEntity> stockPricesEntityList = ScrapingComponent.getStockPricesList(7575, args.startDate, args.endDate);
+			List<StockPricesEntity> stockPricesEntityList = ScrapingComponent.getStockPricesList(7575, args.startDate, args.endDate, null);
+
+			int size = 0;
+			if (!CheckUtils.isEmpty(stockPricesEntityList)) {
+				size = stockPricesEntityList.size();
+			}
+			System.out.println("取得件数は " + size + " 件です。");
 		} catch (ScrapingException e) {
 			// TODO 自動生成された catch ブロック
 			e.printStackTrace();

@@ -8,6 +8,7 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -26,12 +27,14 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import yokohama.yellow_man.common_tools.CheckUtils;
 import yokohama.yellow_man.common_tools.DateUtils;
 import yokohama.yellow_man.sena.components.scraping.entity.CompanySchedulesEntity;
 import yokohama.yellow_man.sena.components.scraping.entity.DebitBalancesEntity;
 import yokohama.yellow_man.sena.components.scraping.entity.FinancesEntity;
 import yokohama.yellow_man.sena.components.scraping.entity.IndicatorsEntity;
 import yokohama.yellow_man.sena.components.scraping.entity.StockPricesEntity;
+import yokohama.yellow_man.sena.core.components.AppLogger;
 import yokohama.yellow_man.sena.core.definitions.AppConsts;
 
 /**
@@ -531,20 +534,45 @@ public class ScrapingComponent {
 	 * @param stockCode 銘柄コード
 	 * @param startDate 取得開始日
 	 * @param endDate 取得終了日
+	 * @param page ページ（※nullの場合、初回ページを取得）
 	 * @return 株価エンティティを返却する。
 	 * @throws ScrapingException スクレイピング時に発生する例外。
 	 * @since 1.1.0-1.2
 	 * @see StockPricesEntity
 	 * @see ScrapingException
 	 */
-	public static List<StockPricesEntity> getStockPricesList(Integer stockCode, Date startDate, Date endDate) throws ScrapingException {
+	public static List<StockPricesEntity> getStockPricesList(Integer stockCode, Date startDate, Date endDate, Integer page) throws ScrapingException {
 		String messagePrefix = "stockCode=" + stockCode;
 
 		URI getUrl = null;
 		List<StockPricesEntity> retList = null;
+		StringBuilder urlBuilder = new StringBuilder(GET_STOCK_PRICES_ACCESS_URL + stockCode);
+
+		// 日付指定がない場合、現行仕様では3ページ分（※1ページ20件）を取得
+		// 開始日の指定がある場合
+		if (startDate != null) {
+			int year  = DateUtils.getYear(startDate);
+			int month = DateUtils.getMonth(startDate);
+			int day   = DateUtils.getDay(startDate);
+			urlBuilder.append("&sy=").append(year).append("&sm=").append(month).append("&sd=").append(day);
+		}
+		// 終了日の指定がある場合
+		if (endDate != null) {
+			int year  = DateUtils.getYear(endDate);
+			int month = DateUtils.getMonth(endDate);
+			int day   = DateUtils.getDay(endDate);
+			urlBuilder.append("&ey=").append(year).append("&em=").append(month).append("&ed=").append(day);
+		}
+		// ページの指定がある場合
+		if (page != null && page.intValue() > 0) {
+			urlBuilder.append("&p=").append(page);
+		} else if (page == null) {
+			// 指定がない場合、現在ページをセット
+			page = 1;
+		}
 
 		try {
-			getUrl = new URI(GET_STOCK_PRICES_ACCESS_URL + stockCode);
+			getUrl = new URI(urlBuilder.toString());
 		} catch (URISyntaxException e) {
 			throw new ScrapingException("URL作成に失敗しました。：" + messagePrefix, e);
 		}
@@ -578,13 +606,14 @@ public class ScrapingComponent {
 			}
 
 			Document document = Jsoup.parse(html);
-			// tableを読み込む
+
+			// tableを読み込む（※1ページ目：日付の降順で取得される）
 			Elements tableTrList = document.getElementsByClass("boardFin").select("tr");
 
 			if (tableTrList != null && tableTrList.size() > 4) {
 				int tableTrSize = tableTrList.size();
 				retList = new ArrayList<StockPricesEntity>();
-				for (int i = 4; i < tableTrSize; i++) {
+				for (int i = 1; i < tableTrSize; i++) {
 					Element trElement = tableTrList.get(i);
 					Elements tdElements = trElement.select("td");
 					if (tdElements != null && tdElements.size() == 7) {
@@ -608,10 +637,29 @@ public class ScrapingComponent {
 					}
 				}
 			}
-
 		} catch (IOException e) {
 			throw new ScrapingException("HTTP GET リクエスト時にエラーが発生しました。：getUrl=" + getUrl, e);
 		}
+
+		// 次ページをリクエスト
+		if (CheckUtils.isEmpty(retList)) {
+			return null;
+		} else {
+			// インターバル(2秒～5秒)
+			try {
+				Random rnd = new Random();
+				int ran = rnd.nextInt(3) + 2;
+				Thread.sleep(1000 * ran);
+			} catch (InterruptedException e) {
+				AppLogger.error("インターバル取得時にエラーが発生しました。", e);
+			}
+
+			List<StockPricesEntity> retNextList = getStockPricesList(stockCode, startDate, endDate, (page.intValue() + 1));
+			if (!CheckUtils.isEmpty(retNextList)) {
+				retList.addAll(retNextList);
+			}
+		}
+
 		return retList;
 	}
 

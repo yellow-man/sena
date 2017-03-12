@@ -71,7 +71,7 @@ public class ImportStockPrices extends AppLoggerMailJob {
 
 				try {
 					// 外部サイトから株価情報を取得
-					List<StockPricesEntity> stockPricesEntityList = ScrapingComponent.getStockPricesList(stockCode, args.startDate, args.endDate);
+					List<StockPricesEntity> stockPricesEntityList = ScrapingComponent.getStockPricesList(stockCode, args.startDate, args.endDate, null);
 
 					if (CheckUtils.isEmpty(stockPricesEntityList)) {
 						AppLogger.warn(new StringBuffer("株価リストが取得できませんでした。：")
