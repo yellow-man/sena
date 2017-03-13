@@ -1,5 +1,7 @@
 package yokohama.yellow_man.sena.components.scraping.entity;
 
+import java.util.Date;
+
 /**
  * 株価エンティティ。
  * <p>スクレイピング結果の株価情報を保持する。
@@ -13,7 +15,7 @@ public class StockPricesEntity extends EntityBase {
 	public String dateStr;
 
 	/** 日付（日付） */
-	public String date;
+	public Date date;
 
 	/** 銘柄コード */
 	public Integer stockCode;

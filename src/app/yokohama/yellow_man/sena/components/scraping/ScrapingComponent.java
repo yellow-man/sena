@@ -610,7 +610,7 @@ public class ScrapingComponent {
 			// tableを読み込む（※1ページ目：日付の降順で取得される）
 			Elements tableTrList = document.getElementsByClass("boardFin").select("tr");
 
-			if (tableTrList != null && tableTrList.size() > 4) {
+			if (tableTrList != null && tableTrList.size() > 1) {
 				int tableTrSize = tableTrList.size();
 				retList = new ArrayList<StockPricesEntity>();
 				for (int i = 1; i < tableTrSize; i++) {
@@ -621,18 +621,17 @@ public class ScrapingComponent {
 
 						try{
 							stockPrices.dateStr = tdElements.get(0).text();
-							stockPrices.date = null;
+							stockPrices.date = DateUtils.toDate(stockPrices.dateStr, DateUtils.DATE_FORMAT_YYYY_M_D_JP);
 							stockPrices.stockCode = stockCode;
-							stockPrices.openingPrice = tdElements.get(1).text();
-							stockPrices.highPrice = tdElements.get(2).text();
-							stockPrices.lowPrice = tdElements.get(3).text();
-							stockPrices.closingPrice = tdElements.get(4).text();
-							stockPrices.turnover = tdElements.get(5).text();
-							stockPrices.adjustedClosingPrice = tdElements.get(6).text();
+							stockPrices.openingPrice = tdElements.get(1).text().replaceAll(" |　|,", "");
+							stockPrices.highPrice = tdElements.get(2).text().replaceAll(" |　|,", "");
+							stockPrices.lowPrice = tdElements.get(3).text().replaceAll(" |　|,", "");
+							stockPrices.closingPrice = tdElements.get(4).text().replaceAll(" |　|,", "");
+							stockPrices.turnover = tdElements.get(5).text().replaceAll(" |　|,", "");
+							stockPrices.adjustedClosingPrice = tdElements.get(6).text().replaceAll(" |　|,", "");
 						}catch(Exception e){
 							continue;
 						}
-						System.out.println(stockPrices.toString());
 						retList.add(stockPrices);
 					}
 				}

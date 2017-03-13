@@ -6,11 +6,13 @@ import java.util.Random;
 
 import play.Play;
 import yokohama.yellow_man.common_tools.CheckUtils;
+import yokohama.yellow_man.sena.components.db.StockPricesComponent;
 import yokohama.yellow_man.sena.components.db.StocksComponent;
 import yokohama.yellow_man.sena.components.scraping.ScrapingComponent;
 import yokohama.yellow_man.sena.components.scraping.ScrapingException;
 import yokohama.yellow_man.sena.components.scraping.entity.StockPricesEntity;
 import yokohama.yellow_man.sena.core.components.AppLogger;
+import yokohama.yellow_man.sena.core.models.StockPrices;
 import yokohama.yellow_man.sena.core.models.Stocks;
 import yokohama.yellow_man.sena.jobs.JobExecutor.JobArgument;
 
@@ -82,7 +84,7 @@ public class ImportStockPrices extends AppLoggerMailJob {
 					} else {
 
 						// モデルに詰め替えDBに保存
-						int ret = _saveStockPrices(stockCode, stockPricesEntityList);
+						int ret = _saveStockPrices(stockCode, args.startDate, args.endDate, stockPricesEntityList);
 						switch (ret) {
 							case 0:
 								success++;
@@ -127,12 +129,51 @@ public class ImportStockPrices extends AppLoggerMailJob {
 	 * 時間はかかるが、バルクインサートは使用せず1件ずつ処理を行う。
 	 *
 	 * @param stockCode 銘柄コード
+	 * @param startDate 取得開始日
+	 * @param endDate 取得終了日
 	 * @param stockPricesEntityList 株価エンティティのリスト
 	 * @return 1件インポートが成功したら（0..成功）、ただし例外が発生していたら（1..失敗）、1件も処理しなかったら（2..スキップ）
 	 * @since 1.1.0-1.2
 	 */
-	private int _saveStockPrices(Integer stockCode, List<StockPricesEntity> stockPricesEntityList) {
+	private int _saveStockPrices(Integer stockCode, Date startDate, Date endDate, List<StockPricesEntity> stockPricesEntityList) {
 		int ret = 2;
+
+		// 登録済みの株価情報を取得する。
+		List<Long> dateTimeList = StockPricesComponent.getDateTimeListByStockCode(stockCode, startDate, endDate);
+
+		for (StockPricesEntity stockPricesEntity : stockPricesEntityList) {
+			Date date = stockPricesEntity.date;
+
+			if (date == null
+					|| (dateTimeList != null && dateTimeList.contains(Long.valueOf(date.getTime())))) {
+				AppLogger.info("日付が変換できないか、既に登録済みの為処理をスキップしました。：stockPricesEntity=" + stockPricesEntity);
+				continue;
+			}
+
+			StockPrices stockPrices = new StockPrices();
+			try {
+				stockPrices.date                 = stockPricesEntity.date;
+				stockPrices.stockCode            = stockPricesEntity.stockCode;
+				stockPrices.openingPrice         = yokohama.yellow_man.common_tools.NumberUtils.toBigDecimal(stockPricesEntity.openingPrice, null);
+				stockPrices.highPrice            = yokohama.yellow_man.common_tools.NumberUtils.toBigDecimal(stockPricesEntity.highPrice, null);
+				stockPrices.lowPrice             = yokohama.yellow_man.common_tools.NumberUtils.toBigDecimal(stockPricesEntity.lowPrice, null);
+				stockPrices.closingPrice         = yokohama.yellow_man.common_tools.NumberUtils.toBigDecimal(stockPricesEntity.closingPrice, null);
+				stockPrices.turnover             = yokohama.yellow_man.common_tools.NumberUtils.toBigDecimal(stockPricesEntity.turnover, null);
+				stockPrices.adjustedClosingPrice = yokohama.yellow_man.common_tools.NumberUtils.toBigDecimal(stockPricesEntity.adjustedClosingPrice, null);
+				stockPrices.created              = new Date();
+				stockPrices.modified             = new Date();
+				stockPrices.deleteFlg            = false;
+				stockPrices.save();
+
+				// 例外が発生していたら、失敗として扱う
+				if (ret != 1) {
+					ret = 0;
+				}
+			} catch (Exception e) {
+				AppLogger.error("株価DB保存時にエラーが発生しました。：stockPricesEntity=" + stockPricesEntity, e);
+				ret = 1;
+			}
+		}
 		return ret;
 	}
 }
