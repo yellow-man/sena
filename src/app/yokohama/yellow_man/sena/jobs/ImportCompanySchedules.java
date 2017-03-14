@@ -52,7 +52,7 @@ public class ImportCompanySchedules extends AppLoggerMailJob {
 	}
 
 	/**
-	 * @see yokohama.yellow_man.sena.jobs.AppJob#run(java.util.List)
+	 * @see yokohama.yellow_man.sena.jobs.AppJob#run(yokohama.yellow_man.sena.jobs.JobExecutor.JobArgument)
 	 * @since 1.1.0-1.2
 	 */
 	@Override

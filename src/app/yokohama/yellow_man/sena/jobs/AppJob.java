@@ -1,14 +1,12 @@
 package yokohama.yellow_man.sena.jobs;
 
-import java.util.List;
-
 import yokohama.yellow_man.sena.core.components.AppLogger;
 import yokohama.yellow_man.sena.jobs.JobExecutor.JobArgument;
 
 /**
  * バッチ処理の基底クラス。
  * <p>バッチ処理を実装する場合、このクラスを継承する。
- * バッチの起動は、{@link JobExecutor#execute()}メソッドより呼び出される。
+ * バッチの起動は、{@link JobExecutor#execute(yokohama.yellow_man.sena.jobs.JobExecutor.JobArgument)}メソッドより呼び出される。
  *
  * @author yellow-man
  * @since 1.0.0-1.0
@@ -18,7 +16,7 @@ public abstract class AppJob {
 
 	/**
 	 * バッチ処理の呼び出し処理。
-	 * {@link JobExecutor#execute()}メソッドより呼び出される。
+	 * {@link JobExecutor#execute(yokohama.yellow_man.sena.jobs.JobExecutor.JobArgument)}メソッドより呼び出される。
 	 *
 	 * @param args 起動引数
 	 * @since 1.1.0-1.2
@@ -40,7 +38,7 @@ public abstract class AppJob {
 	/**
 	 * バッチ処理の初期化。
 	 * 初期化処理が必要な場合、このメソッドを継承する。
-	 * <p>初期化に失敗した場合、{@link #before()}、{@link #run(List)}、{@link #after()}メソッドの処理は行われない。
+	 * <p>初期化に失敗した場合、{@link #before()}、{@link #run(yokohama.yellow_man.sena.jobs.JobExecutor.JobArgument)}、{@link #after()}メソッドの処理は行われない。
 	 *
 	 * @return true：初期化成功、false：失敗。
 	 * @since 1.0.0-1.0

@@ -59,7 +59,7 @@ public class ImportStockPrices extends AppLoggerMailJob {
 	 * <li>{@code -maxIntervalSec} インターバル最大値（インターバルとして指定する最大値。デフォルト：5秒）</li>
 	 * </ul>
 	 * @param args 起動引数
-	 * @see yokohama.yellow_man.sena.jobs.AppJob#run(java.util.List)
+	 * @see yokohama.yellow_man.sena.jobs.AppJob#run(yokohama.yellow_man.sena.jobs.JobExecutor.JobArgument)
 	 * @since 1.1.0-1.2
 	 */
 	@Override

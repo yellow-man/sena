@@ -92,21 +92,7 @@ Sena-batchの動作環境、セットアップ方法についてです。
 
 ## ドキュメント（Document）
 
-* [Sena-batch アプリケーション API仕様](http://yellow-man.github.io/sena-batch/javadoc/sena-1.0.0-batch1.0/)
-
-
-
-## 更新履歴（Version history）
-
-* [sena-1.0.0-batch1.0](https://office.yellow-man.yokohama/redmine/versions/1) リリース 2016/05/20
-    * 新機能
-        * タスク [#12](https://office.yellow-man.yokohama/redmine/issues/12): 銘柄一覧インポートバッチの作成 - Sena - yellow-man.yokohama - Redmine
-        * タスク [#13](https://office.yellow-man.yokohama/redmine/issues/13): 企業スケジュールインポートバッチの作成 - Sena - yellow-man.yokohama - Redmine
-        * タスク [#14](https://office.yellow-man.yokohama/redmine/issues/14): 企業スケジュールエクスポートバッチの作成 - Sena - yellow-man.yokohama - Redmine
-        * タスク [#15](https://office.yellow-man.yokohama/redmine/issues/15): 企業財務インポートバッチの作成 - Sena - yellow-man.yokohama - Redmine
-        * タスク [#16](https://office.yellow-man.yokohama/redmine/issues/16): 企業財務情報前年比更新バッチの作成 - Sena - yellow-man.yokohama - Redmine
-        * タスク [#20](https://office.yellow-man.yokohama/redmine/issues/20): 信用残インポートバッチの作成 - Sena - yellow-man.yokohama - Redmine
-        * タスク [#21](https://office.yellow-man.yokohama/redmine/issues/21): 企業指標インポートバッチの作成 - Sena - yellow-man.yokohama - Redmine
+* [Sena-batch（1.1.1-1.2） アプリケーション API仕様](https://yellow-man.github.io/sena-doc/javadoc/web/1.2.0-1.1/)
 
 
 
