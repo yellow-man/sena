@@ -623,6 +623,7 @@ public class ScrapingComponent {
 							stockPrices.dateStr = tdElements.get(0).text();
 							stockPrices.date = DateUtils.toDate(stockPrices.dateStr, DateUtils.DATE_FORMAT_YYYY_M_D_JP);
 							stockPrices.stockCode = stockCode;
+							// TODO yellow-man 「---」なデータがあり得る。DBのnot nullははずした方がいいかもしれない。
 							stockPrices.openingPrice = tdElements.get(1).text().replaceAll(" |　|,", "");
 							stockPrices.highPrice = tdElements.get(2).text().replaceAll(" |　|,", "");
 							stockPrices.lowPrice = tdElements.get(3).text().replaceAll(" |　|,", "");
