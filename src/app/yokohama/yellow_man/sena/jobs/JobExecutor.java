@@ -8,6 +8,7 @@ import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.Option;
 import org.kohsuke.args4j.OptionDef;
+import org.kohsuke.args4j.spi.IntOptionHandler;
 import org.kohsuke.args4j.spi.OneArgumentOptionHandler;
 import org.kohsuke.args4j.spi.Setter;
 import org.kohsuke.args4j.spi.StringArrayOptionHandler;
@@ -35,7 +36,7 @@ import yokohama.yellow_man.common_tools.DateUtils;
  *
  * @author yellow-man
  * @since 1.0.0-1.0
- * @version 1.1.0-1.2
+ * @version 1.1.1-1.2
  */
 public class JobExecutor {
 
@@ -43,23 +44,47 @@ public class JobExecutor {
 	 * 起動引数を保持するクラス。
 	 * @author yellow-man
 	 * @since 1.1.0-1.2
+	 * @version 1.1.1-1.2
 	 */
 	public static class JobArgument {
-		/** 起動引数：実行するバッチクラス名 */
+		/** インターバル定数：インターバルとして指定する最小値。デフォルト：2秒 */
+		public static final Integer MIN_INTERVAL_SEC = 2;
+
+		/** インターバル定数：インターバルとして指定する最大値。デフォルト：5秒 */
+		public static final Integer MAX_INTERVAL_SEC = 5;
+
+
+		/** 起動引数：【必須】実行するバッチクラス名 */
 		@Argument(index=0, metaVar="jobClass", required=true)
 		public String jobClass;
 
-		/** 起動引数：実行するバッチクラスに渡すパラメータ */
+		/** 起動引数：【任意】実行するバッチクラスに渡すパラメータ */
 		@Argument(index=1, metaVar="arguments...", handler=StringArrayOptionHandler.class)
 		public String[] arguments;
 
-		/** 起動引数：取得対象開始日（フォーマット：YYYY-MM-DD） */
+		/** 起動引数：【任意】取得対象開始日（フォーマット：YYYY-MM-DD） */
 		@Option(name="-sd", handler=DateOptionHandler.class, metaVar="startDate", usage="start date")
 		public Date startDate;
 
-		/** 起動引数：取得対象終了日（フォーマット：YYYY-MM-DD） */
+		/** 起動引数：【任意】取得対象終了日（フォーマット：YYYY-MM-DD） */
 		@Option(name="-ed", handler=DateOptionHandler.class, metaVar="endDate", usage="end date")
 		public Date endDate;
+
+		/** 起動引数：【任意】取得対象最小銘柄コード（指定された銘柄コード以降の銘柄情報を取得する。） */
+		@Option(name="-min", handler=IntOptionHandler.class, metaVar="minStockCode", usage="min stock code")
+		public Integer minStockCode;
+
+		/** 起動引数：【任意】取得対象最大銘柄コード（指定された銘柄コードまでの銘柄情報を取得する。） */
+		@Option(name="-max", handler=IntOptionHandler.class, metaVar="maxStockCode", usage="max stock code")
+		public Integer maxStockCode;
+
+		/** 起動引数：【任意】インターバル最小値（インターバルとして指定する最小値。デフォルト：2秒） */
+		@Option(name="-minIntervalSec", handler=IntOptionHandler.class, metaVar="minIntervalSec", usage="min interval")
+		public Integer minIntervalSec;
+
+		/** 起動引数：【任意】インターバル最大値（インターバルとして指定する最大値。デフォルト：5秒） */
+		@Option(name="-maxIntervalSec", handler=IntOptionHandler.class, metaVar="maxIntervalSec", usage="max interval")
+		public Integer maxIntervalSec;
 
 		/**
 		 * args4j ハンドラ拡張 日付チェックハンドラクラス。
@@ -107,6 +132,19 @@ public class JobExecutor {
 		} catch (CmdLineException e) {
 			e.printStackTrace();
 			return;
+		}
+		// インターバルデフォルト値
+		if (jobArgument.minIntervalSec == null) {
+			jobArgument.minIntervalSec = JobArgument.MIN_INTERVAL_SEC;
+		}
+		if (jobArgument.maxIntervalSec == null) {
+			jobArgument.maxIntervalSec = JobArgument.MAX_INTERVAL_SEC;
+		}
+		// 引数が逆転してたらエラー
+		if (jobArgument.maxIntervalSec < jobArgument.minIntervalSec) {
+			throw new IllegalArgumentException(
+					"maxIntervalSec < minIntervalSec：maxIntervalSec=" + jobArgument.maxIntervalSec
+					+ ", minIntervalSec=" + jobArgument.minIntervalSec);
 		}
 		JobExecutor jobExecutor = new JobExecutor();
 		jobExecutor.execute(jobArgument);

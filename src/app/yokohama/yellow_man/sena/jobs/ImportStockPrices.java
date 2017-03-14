@@ -24,6 +24,7 @@ import yokohama.yellow_man.sena.jobs.JobExecutor.JobArgument;
  *
  * @author yellow-man
  * @since 1.1.0-1.2
+ * @version 1.1.1-1.2
  */
 public class ImportStockPrices extends AppLoggerMailJob {
 
@@ -47,6 +48,17 @@ public class ImportStockPrices extends AppLoggerMailJob {
 	}
 
 	/**
+	 * バッチメイン処理。
+	 * <p>下記、起動引数に対応。
+	 * <ul>
+	 * <li>{@code -sd} 取得対象開始日（フォーマット：YYYY-MM-DD）</li>
+	 * <li>{@code -ed} 取得対象終了日（フォーマット：YYYY-MM-DD）</li>
+	 * <li>{@code -min} 取得対象最小銘柄コード（指定された銘柄コード以降の銘柄情報を取得する。）</li>
+	 * <li>{@code -max} 取得対象最大銘柄コード（指定された銘柄コードまでの銘柄情報を取得する。）</li>
+	 * <li>{@code -minIntervalSec} インターバル最小値（インターバルとして指定する最小値。デフォルト：2秒）</li>
+	 * <li>{@code -maxIntervalSec} インターバル最大値（インターバルとして指定する最大値。デフォルト：5秒）</li>
+	 * </ul>
+	 * @param args 起動引数
 	 * @see yokohama.yellow_man.sena.jobs.AppJob#run(java.util.List)
 	 * @since 1.1.0-1.2
 	 */
@@ -62,7 +74,7 @@ public class ImportStockPrices extends AppLoggerMailJob {
 		int skip = 0;
 
 		// 銘柄情報取得
-		List<Stocks> stocksList = StocksComponent.getStocksList();
+		List<Stocks> stocksList = StocksComponent.getStocksList(args.minStockCode, args.maxStockCode);
 		if (CheckUtils.isEmpty(stocksList)) {
 			AppLogger.warn("銘柄情報が取得できませんでした。");
 
@@ -114,7 +126,7 @@ public class ImportStockPrices extends AppLoggerMailJob {
 				// インターバル(2秒～5秒)
 				try {
 					Random rnd = new Random();
-					int ran = rnd.nextInt(3) + 2;
+					int ran = rnd.nextInt(args.maxIntervalSec - args.minIntervalSec) + args.minIntervalSec;
 					Thread.sleep(1000 * ran);
 				} catch (InterruptedException e) {
 					AppLogger.error("インターバル取得時にエラーが発生しました。", e);

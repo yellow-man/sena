@@ -42,7 +42,7 @@ import yokohama.yellow_man.sena.core.definitions.AppConsts;
  *
  * @author yellow-man
  * @since 1.0.0-1.0
- * @version 1.1.0-1.2
+ * @version 1.1.1-1.2
  */
 public class ScrapingComponent {
 
@@ -532,7 +532,7 @@ public class ScrapingComponent {
 	/**
 	 * 株価を取得する。
 	 * @param stockCode 銘柄コード
-	 * @param startDate 取得開始日
+	 * @param startDate 取得開始日（※定期実行によるデータ取りこぼしがないよう、指定された日付より-7日よりデータを取得する。）
 	 * @param endDate 取得終了日
 	 * @param page ページ（※nullの場合、初回ページを取得）
 	 * @return 株価エンティティを返却する。
@@ -550,17 +550,21 @@ public class ScrapingComponent {
 
 		// 日付指定がない場合、現行仕様では3ページ分（※1ページ20件）を取得
 		// 開始日の指定がある場合
-		if (startDate != null) {
-			int year  = DateUtils.getYear(startDate);
-			int month = DateUtils.getMonth(startDate);
-			int day   = DateUtils.getDay(startDate);
-			urlBuilder.append("&sy=").append(year).append("&sm=").append(month).append("&sd=").append(day);
+		if (startDate == null) {
+			startDate = DateUtils.addDay(DateUtils.getJustDate(new Date()), -7);
+		} else {
+			startDate = DateUtils.addDay(startDate, -7);
 		}
+		int year  = DateUtils.getYear(startDate);
+		int month = DateUtils.getMonth(startDate);
+		int day   = DateUtils.getDay(startDate);
+		urlBuilder.append("&sy=").append(year).append("&sm=").append(month).append("&sd=").append(day);
+
 		// 終了日の指定がある場合
 		if (endDate != null) {
-			int year  = DateUtils.getYear(endDate);
-			int month = DateUtils.getMonth(endDate);
-			int day   = DateUtils.getDay(endDate);
+			year  = DateUtils.getYear(endDate);
+			month = DateUtils.getMonth(endDate);
+			day   = DateUtils.getDay(endDate);
 			urlBuilder.append("&ey=").append(year).append("&em=").append(month).append("&ed=").append(day);
 		}
 		// ページの指定がある場合
