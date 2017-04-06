@@ -1,10 +1,10 @@
 name := """sena-batch"""
 
-version := "1.1.1-1.2"
+version := "1.1.2-1.2"
 
 lazy val core = (project in file("modules/sena-core/src")).enablePlugins(PlayJava).settings(javacOptions in (Compile,doc) += "-Xdoclit:none")
 
-lazy val root = (project in file(".")).enablePlugins(PlayJava).dependsOn(core).aggregate(core)
+lazy val root = (project in file(".")).enablePlugins(PlayJava).dependsOn(core).aggregate(core).settings(javacOptions in (Compile,doc) ++= Seq("-notimestamp", "-linksource"))
 
 scalaVersion := "2.11.6"
 

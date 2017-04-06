@@ -2,6 +2,7 @@ package yokohama.yellow_man.sena.jobs;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 import play.Play;
@@ -151,19 +152,46 @@ public class ImportStockPrices extends AppLoggerMailJob {
 		int ret = 2;
 
 		// 登録済みの株価情報を取得する。
-		List<Long> dateTimeList = StockPricesComponent.getDateTimeListByStockCode(stockCode, startDate, endDate);
+		Map<Date, StockPrices> stockPricesMap = StockPricesComponent.getStockPricesMapByStockCode(stockCode, startDate, endDate);
 
 		for (StockPricesEntity stockPricesEntity : stockPricesEntityList) {
 			Date date = stockPricesEntity.date;
 
-			if (date == null
-					|| (dateTimeList != null && dateTimeList.contains(Long.valueOf(date.getTime())))) {
-				AppLogger.info("日付が変換できないか、既に登録済みの為処理をスキップしました。：stockPricesEntity=" + stockPricesEntity);
+			if (date == null) {
+				AppLogger.info("日付が変換できない為処理をスキップしました。：stockPricesEntity=" + stockPricesEntity);
 				continue;
 			}
 
-			StockPrices stockPrices = new StockPrices();
+			// 開始日〜終了日の範囲外のデータはスキップ。
+			if (startDate != null && startDate.getTime() > date.getTime()) {
+				AppLogger.info("日付が範囲外の為処理をスキップしました。：startDate=" + startDate + " > date=" + date);
+				continue;
+			}
+			if (endDate != null && endDate.getTime() < date.getTime()) {
+				AppLogger.info("日付が範囲外の為処理をスキップしました。：endDate=" + endDate + " < date=" + date);
+				continue;
+			}
+
+			StockPrices stockPrices = null;
+			// データが存在する場合更新
+			if (stockPricesMap != null && stockPricesMap.containsKey(date)) {
+				stockPrices = stockPricesMap.get(date);
+			} else {
+				stockPrices = new StockPrices();
+			}
 			try {
+				String splitFrom = null;
+				String splitTo = null;
+				if (stockPricesEntity.splitFlg) {
+					String[] splitFromTo = stockPricesEntity.splitText.split(",");
+					if (splitFromTo.length >= 2) {
+						splitFrom = splitFromTo[0];
+						splitTo = splitFromTo[1];
+					} else {
+						AppLogger.warn("分割情報が取得できませんでした。：stockPricesEntity=" + stockPricesEntity);
+					}
+				}
+
 				stockPrices.date                 = stockPricesEntity.date;
 				stockPrices.stockCode            = stockPricesEntity.stockCode;
 				stockPrices.openingPrice         = yokohama.yellow_man.common_tools.NumberUtils.toBigDecimal(stockPricesEntity.openingPrice, null);
@@ -172,10 +200,15 @@ public class ImportStockPrices extends AppLoggerMailJob {
 				stockPrices.closingPrice         = yokohama.yellow_man.common_tools.NumberUtils.toBigDecimal(stockPricesEntity.closingPrice, null);
 				stockPrices.turnover             = yokohama.yellow_man.common_tools.NumberUtils.toBigDecimal(stockPricesEntity.turnover, null);
 				stockPrices.adjustedClosingPrice = yokohama.yellow_man.common_tools.NumberUtils.toBigDecimal(stockPricesEntity.adjustedClosingPrice, null);
-				stockPrices.created              = new Date();
-				stockPrices.modified             = new Date();
+				stockPrices.splitFlg             = stockPricesEntity.splitFlg;
+				stockPrices.splitFrom            = yokohama.yellow_man.common_tools.NumberUtils.toBigDecimal(splitFrom, null);
+				stockPrices.splitTo              = yokohama.yellow_man.common_tools.NumberUtils.toBigDecimal(splitTo, null);
 				stockPrices.deleteFlg            = false;
-				stockPrices.save();
+				if (stockPrices.id != null) {
+					stockPrices.update();
+				} else {
+					stockPrices.save();
+				}
 
 				// 例外が発生していたら、失敗として扱う
 				if (ret != 1) {

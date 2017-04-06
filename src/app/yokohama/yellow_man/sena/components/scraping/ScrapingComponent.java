@@ -7,7 +7,9 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -42,7 +44,7 @@ import yokohama.yellow_man.sena.core.definitions.AppConsts;
  *
  * @author yellow-man
  * @since 1.0.0-1.0
- * @version 1.1.1-1.2
+ * @version 1.1.2-1.2
  */
 public class ScrapingComponent {
 
@@ -617,9 +619,13 @@ public class ScrapingComponent {
 			if (tableTrList != null && tableTrList.size() > 1) {
 				int tableTrSize = tableTrList.size();
 				retList = new ArrayList<StockPricesEntity>();
+				// 株式分割情報を保持
+				Map<String, String> splitMap = new HashMap<String, String>();
 				for (int i = 1; i < tableTrSize; i++) {
 					Element trElement = tableTrList.get(i);
 					Elements tdElements = trElement.select("td");
+
+					// 株価情報取得
 					if (tdElements != null && tdElements.size() == 7) {
 						StockPricesEntity stockPrices = new StockPricesEntity();
 
@@ -627,17 +633,34 @@ public class ScrapingComponent {
 							stockPrices.dateStr = tdElements.get(0).text();
 							stockPrices.date = DateUtils.toDate(stockPrices.dateStr, DateUtils.DATE_FORMAT_YYYY_M_D_JP);
 							stockPrices.stockCode = stockCode;
-							// TODO yellow-man 「---」なデータがあり得る。DBのnot nullははずした方がいいかもしれない。
+							// 「---」なデータがあり得る。
 							stockPrices.openingPrice = tdElements.get(1).text().replaceAll(" |　|,", "");
 							stockPrices.highPrice = tdElements.get(2).text().replaceAll(" |　|,", "");
 							stockPrices.lowPrice = tdElements.get(3).text().replaceAll(" |　|,", "");
 							stockPrices.closingPrice = tdElements.get(4).text().replaceAll(" |　|,", "");
 							stockPrices.turnover = tdElements.get(5).text().replaceAll(" |　|,", "");
 							stockPrices.adjustedClosingPrice = tdElements.get(6).text().replaceAll(" |　|,", "");
+
+							// 株式分割されていた場合、分割情報をセットする。
+							if (splitMap.containsKey(stockPrices.dateStr)) {
+								stockPrices.splitFlg = true;
+								stockPrices.splitText = splitMap.get(stockPrices.dateStr);
+							}
+
 						}catch(Exception e){
 							continue;
 						}
 						retList.add(stockPrices);
+
+					// 株式分割情報取得
+					} else if (tdElements != null && tdElements.size() == 2) {
+						String dateStr = tdElements.get(0).text();
+						String splitStr = tdElements.get(1).text().replaceAll(" |　|,|分割:|株", "").replaceAll("->", ",");
+						splitMap.put(dateStr, splitStr);
+
+					// その他（※ログ出力）
+					} else {
+						System.out.println("tdElements=" + tdElements);
 					}
 				}
 			}
@@ -666,5 +689,4 @@ public class ScrapingComponent {
 
 		return retList;
 	}
-
 }

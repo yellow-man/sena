@@ -51,11 +51,14 @@ public class TestJob extends AppLoggerMailJob {
 		AppLogger.info("infoテスト:" + FieldUtils.toStringField(args));
 
 		try {
-			List<StockPricesEntity> stockPricesEntityList = ScrapingComponent.getStockPricesList(7575, args.startDate, args.endDate, null);
+			List<StockPricesEntity> stockPricesEntityList = ScrapingComponent.getStockPricesList(1712, args.startDate, args.endDate, null);
 
 			int size = 0;
 			if (!CheckUtils.isEmpty(stockPricesEntityList)) {
 				size = stockPricesEntityList.size();
+				for (StockPricesEntity stockPricesEntity : stockPricesEntityList) {
+					AppLogger.debug(stockPricesEntity.toString());
+				}
 			}
 			System.out.println("取得件数は " + size + " 件です。");
 		} catch (ScrapingException e) {

@@ -38,4 +38,9 @@ public class StockPricesEntity extends EntityBase {
 	/** 調整後終値	（分割実施前の終値を分割後の値に調整したもの、整数部：15桁、小数部：5桁） */
 	public String adjustedClosingPrice;
 
+	/** 分割フラグ（1：分割あり、0：分割無し） */
+	public Boolean splitFlg = false;
+
+	/** 分割テキスト */
+	public String splitText;
 }
