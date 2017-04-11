@@ -1,5 +1,6 @@
 package yokohama.yellow_man.sena.jobs;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -7,6 +8,7 @@ import java.util.Random;
 
 import play.Play;
 import yokohama.yellow_man.common_tools.CheckUtils;
+import yokohama.yellow_man.common_tools.FieldUtils;
 import yokohama.yellow_man.sena.components.db.StockPricesComponent;
 import yokohama.yellow_man.sena.components.db.StocksComponent;
 import yokohama.yellow_man.sena.components.scraping.ScrapingComponent;
@@ -25,7 +27,7 @@ import yokohama.yellow_man.sena.jobs.JobExecutor.JobArgument;
  *
  * @author yellow-man
  * @since 1.1.0-1.2
- * @version 1.1.1-1.2
+ * @version 1.1.3-1.2
  */
 public class ImportStockPrices extends AppLoggerMailJob {
 
@@ -127,6 +129,7 @@ public class ImportStockPrices extends AppLoggerMailJob {
 				// インターバル(2秒～5秒)
 				try {
 					Random rnd = new Random();
+					// TODO yellow-man バグあり。max,min同一の値を指定した場合落ちる。
 					int ran = rnd.nextInt(args.maxIntervalSec - args.minIntervalSec) + args.minIntervalSec;
 					Thread.sleep(1000 * ran);
 				} catch (InterruptedException e) {
@@ -148,12 +151,14 @@ public class ImportStockPrices extends AppLoggerMailJob {
 	 * @return 1件インポートが成功したら（0..成功）、ただし例外が発生していたら（1..失敗）、1件も処理しなかったら（2..スキップ）
 	 * @since 1.1.0-1.2
 	 */
-	private int _saveStockPrices(Integer stockCode, Date startDate, Date endDate, List<StockPricesEntity> stockPricesEntityList) {
+	private int _saveStockPrices(final Integer stockCode, Date startDate, Date endDate, List<StockPricesEntity> stockPricesEntityList) {
 		int ret = 2;
 
 		// 登録済みの株価情報を取得する。
 		Map<Date, StockPrices> stockPricesMap = StockPricesComponent.getStockPricesMapByStockCode(stockCode, startDate, endDate);
 
+		// 株式分割が発生しているかどうか判定フラグ
+		boolean isSplit = false;
 		for (StockPricesEntity stockPricesEntity : stockPricesEntityList) {
 			Date date = stockPricesEntity.date;
 
@@ -187,6 +192,7 @@ public class ImportStockPrices extends AppLoggerMailJob {
 					if (splitFromTo.length >= 2) {
 						splitFrom = splitFromTo[0];
 						splitTo = splitFromTo[1];
+						isSplit = true;
 					} else {
 						AppLogger.warn("分割情報が取得できませんでした。：stockPricesEntity=" + stockPricesEntity);
 					}
@@ -219,6 +225,63 @@ public class ImportStockPrices extends AppLoggerMailJob {
 				ret = 1;
 			}
 		}
+
+		// 分割フラグを検知したら別スレッドでデータ調整を行う。
+		if (isSplit) {
+			try {
+				new Thread(new Runnable() {
+					@Override
+					public void run() {
+						ImportStockPrices.this._splitAdjust(stockCode);
+					}
+				}).start();
+			} catch (Exception e) {
+				AppLogger.error("株式分割データ調整スレッドでエラーが発生しました。：stockCode=" + stockCode);
+			}
+		}
 		return ret;
+	}
+
+	/**
+	 * 株式分割後データ調整。
+	 * <p>株式分割が発生した場合、取り込み済みレコードの「調整後終値」を調整する必要がある。
+	 * @param stockCode 調整対象の銘柄コード
+	 * @since 1.1.3-1.2
+	 */
+	private void _splitAdjust(Integer stockCode) {
+		AppLogger.info("株式分割後データ調整開始。：stockCode=" + stockCode);
+
+		// 更新対象データを取得する。
+		Map<Date, StockPrices> stockPricesMap = StockPricesComponent.getStockPricesMapByStockCode(stockCode);
+		if (CheckUtils.isEmpty(stockPricesMap)) {
+			AppLogger.warn("株価リストが取得できませんでした。：stockCode=" + stockCode);
+			return;
+
+		} else {
+			AppLogger.info("株式分割後データ調整対象件数。：size=" + stockPricesMap.size());
+
+			BigDecimal splitTo = new BigDecimal(1.0);
+			BigDecimal splitEmpty = new BigDecimal(0.0);
+			for (Map.Entry<Date, StockPrices> entry : stockPricesMap.entrySet()) {
+				StockPrices stockPrices = entry.getValue();
+				try {
+					if (stockPrices.closingPrice == null) {
+						continue;
+					}
+
+					// 循環小数が発生する場合、java.lang.ArithmeticExceptionが発生するので四捨五入を指定する。
+					stockPrices.adjustedClosingPrice = stockPrices.closingPrice.divide(splitTo, 2, BigDecimal.ROUND_HALF_UP);
+
+					// 分割フラグがONの場合、次の計算から分割数をかけ合わせた値で除算を行う。（※splitToが「0」になると0割りが発生するのでチェック。）
+					if (stockPrices.splitFlg && stockPrices.splitTo.compareTo(splitEmpty) > 0) {
+						splitTo = splitTo.multiply(stockPrices.splitTo);
+					}
+					stockPrices.update();
+				} catch (Exception e) {
+					AppLogger.error("株式分割データ調整でエラーが発生しました。：stockPrices=" + FieldUtils.toStringField(stockPrices), e);
+				}
+			}
+		}
+		AppLogger.info("株式分割後データ調整終了。：stockCode=" + stockCode);
 	}
 }
