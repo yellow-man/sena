@@ -226,15 +226,10 @@ public class ImportStockPrices extends AppLoggerMailJob {
 			}
 		}
 
-		// 分割フラグを検知したら別スレッドでデータ調整を行う。
+		// 分割フラグを検知したらデータ調整を行う。
 		if (isSplit) {
 			try {
-				new Thread(new Runnable() {
-					@Override
-					public void run() {
-						ImportStockPrices.this._splitAdjust(stockCode);
-					}
-				}).start();
+				ImportStockPrices.this._splitAdjust(stockCode);
 			} catch (Exception e) {
 				AppLogger.error("株式分割データ調整スレッドでエラーが発生しました。：stockCode=" + stockCode);
 			}
