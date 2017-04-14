@@ -29,8 +29,8 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import yokohama.yellow_man.common_tools.CheckUtils;
-import yokohama.yellow_man.common_tools.DateUtils;
+import yokohama.yellow_man.common_tools.util.CheckUtils;
+import yokohama.yellow_man.common_tools.util.DateUtils;
 import yokohama.yellow_man.sena.components.scraping.entity.CompanySchedulesEntity;
 import yokohama.yellow_man.sena.components.scraping.entity.DebitBalancesEntity;
 import yokohama.yellow_man.sena.components.scraping.entity.FinancesEntity;

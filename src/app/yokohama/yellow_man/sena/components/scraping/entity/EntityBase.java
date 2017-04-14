@@ -1,6 +1,6 @@
 package yokohama.yellow_man.sena.components.scraping.entity;
 
-import yokohama.yellow_man.common_tools.FieldUtils;
+import yokohama.yellow_man.common_tools.util.FieldUtils;
 
 /**
  * エンティティ基底クラス。

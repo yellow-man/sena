@@ -3,7 +3,7 @@ package yokohama.yellow_man.sena.components.db;
 import java.util.ArrayList;
 import java.util.List;
 
-import yokohama.yellow_man.common_tools.CheckUtils;
+import yokohama.yellow_man.common_tools.util.CheckUtils;
 import yokohama.yellow_man.sena.core.models.DebitBalances;
 
 /**

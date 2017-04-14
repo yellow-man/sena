@@ -14,7 +14,7 @@ import org.kohsuke.args4j.spi.Setter;
 import org.kohsuke.args4j.spi.StringArrayOptionHandler;
 
 import play.Play;
-import yokohama.yellow_man.common_tools.DateUtils;
+import yokohama.yellow_man.common_tools.util.DateUtils;
 
 /**
  * バッチ処理の起動クラス。

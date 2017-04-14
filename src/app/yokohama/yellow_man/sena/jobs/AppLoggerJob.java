@@ -3,7 +3,7 @@ package yokohama.yellow_man.sena.jobs;
 import java.text.SimpleDateFormat;
 
 import play.Play;
-import yokohama.yellow_man.common_tools.DateUtils;
+import yokohama.yellow_man.common_tools.util.DateUtils;
 import yokohama.yellow_man.sena.core.components.AppLogger;
 
 /**

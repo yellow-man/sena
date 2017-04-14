@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.avaje.ebean.Ebean;
 
-import yokohama.yellow_man.common_tools.CheckUtils;
+import yokohama.yellow_man.common_tools.util.CheckUtils;
 import yokohama.yellow_man.sena.core.models.Finances;
 
 /**

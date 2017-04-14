@@ -3,8 +3,8 @@ package yokohama.yellow_man.sena.jobs;
 import java.util.Date;
 import java.util.List;
 
-import yokohama.yellow_man.common_tools.CheckUtils;
-import yokohama.yellow_man.common_tools.FieldUtils;
+import yokohama.yellow_man.common_tools.util.CheckUtils;
+import yokohama.yellow_man.common_tools.util.FieldUtils;
 import yokohama.yellow_man.sena.components.scraping.ScrapingComponent;
 import yokohama.yellow_man.sena.components.scraping.ScrapingException;
 import yokohama.yellow_man.sena.components.scraping.entity.StockPricesEntity;
@@ -62,7 +62,6 @@ public class TestJob extends AppLoggerMailJob {
 			}
 			System.out.println("取得件数は " + size + " 件です。");
 		} catch (ScrapingException e) {
-			// TODO 自動生成された catch ブロック
 			e.printStackTrace();
 		}
 	}

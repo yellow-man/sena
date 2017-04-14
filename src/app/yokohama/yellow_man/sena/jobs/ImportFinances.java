@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Random;
 
 import play.Play;
-import yokohama.yellow_man.common_tools.CheckUtils;
+import yokohama.yellow_man.common_tools.util.CheckUtils;
 import yokohama.yellow_man.sena.components.db.FinancesComponent;
 import yokohama.yellow_man.sena.components.db.StocksComponent;
 import yokohama.yellow_man.sena.components.scraping.ScrapingComponent;

@@ -7,7 +7,7 @@ import java.util.Random;
 import org.apache.commons.lang3.math.NumberUtils;
 
 import play.Play;
-import yokohama.yellow_man.common_tools.CheckUtils;
+import yokohama.yellow_man.common_tools.util.CheckUtils;
 import yokohama.yellow_man.sena.components.db.DebitBalancesComponent;
 import yokohama.yellow_man.sena.components.db.StocksComponent;
 import yokohama.yellow_man.sena.components.scraping.ScrapingComponent;
@@ -158,7 +158,7 @@ public class ImportDebitBalances extends AppLoggerMailJob {
 				debitBalances.stockCode            = debitBalancesEntity.stockCode;
 				debitBalances.marginSellingBalance = NumberUtils.toInt(debitBalancesEntity.marginSellingBalance, -1);
 				debitBalances.marginDebtBalance    = NumberUtils.toInt(debitBalancesEntity.marginDebtBalance, -1);
-				debitBalances.ratioMarginBalance   = yokohama.yellow_man.common_tools.NumberUtils.toBigDecimal(debitBalancesEntity.ratioMarginBalance, "-1");
+				debitBalances.ratioMarginBalance   = yokohama.yellow_man.common_tools.util.NumberUtils.toBigDecimal(debitBalancesEntity.ratioMarginBalance, "-1");
 				debitBalances.created              = new Date();
 				debitBalances.modified             = new Date();
 				debitBalances.deleteFlg            = false;

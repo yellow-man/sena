@@ -4,7 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import play.Play;
-import yokohama.yellow_man.common_tools.CheckUtils;
+import yokohama.yellow_man.common_tools.util.CheckUtils;
 import yokohama.yellow_man.sena.components.db.CompanySchedulesComponent;
 import yokohama.yellow_man.sena.core.components.AppLogger;
 import yokohama.yellow_man.sena.core.components.google.CalendarComponent;

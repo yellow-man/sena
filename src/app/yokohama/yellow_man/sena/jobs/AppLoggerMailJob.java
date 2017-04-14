@@ -9,7 +9,7 @@ import org.apache.commons.mail.MultiPartEmail;
 import com.google.common.base.Charsets;
 
 import play.Play;
-import yokohama.yellow_man.common_tools.StringUtils;
+import yokohama.yellow_man.common_tools.util.StringUtils;
 import yokohama.yellow_man.sena.core.components.AppLogger;
 
 /**
